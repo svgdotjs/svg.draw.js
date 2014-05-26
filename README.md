@@ -26,4 +26,3 @@ You can use your own mouse-events. Just pass the event-Object to the draw-Functi
     });
 
 
-*Till now this works only with the rect-function. Stay tuned for further updates*
