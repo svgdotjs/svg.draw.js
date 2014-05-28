@@ -1,20 +1,24 @@
 // svg.draw.js 0.0.5 - Copyright (c) 2014 Wout Fierens - Licensed under the MIT license
 // extended by Urich-Matthias Schäfer (https://github.com/Fuzzyma)
 
+// TODO: call cancel and done from out of the plugin
+
 ;(function() {
 
     SVG.extend(SVG.Element, {
         // Draw element with mouse
         draw: function(event, options) {
 
-            var start, stop, point, update, drawCircles, defaults
+            var start, stop, point, update, done, cancel, drawCircles, defaults
                 , element = this
                 , draw = {}
                 , parent = this.parent._parent(SVG.Nested) || this._parent(SVG.Doc)
                 , set = parent.set();
 
             defaults = {
-                withRadius:false
+                useRadius:false,
+                keyDone:13,
+                keyCancel:27
             };
 
             if(this.calc === null)return element;  // This element was already drawn. You cant draw an element twice. Instead create a new one!
@@ -32,6 +36,7 @@
 
                 element.startParams = { x:event.pageX, y: event.pageY, offset:offset(parent) };
 
+                SVG.on(window, 'keydown', cancel);
 
                 switch(element.type){
                     case 'rect':
@@ -73,6 +78,8 @@
                     case 'polyline':
                     case 'polygon':
 
+                        SVG.on(window, 'keydown', done);
+
                         element.array.value[0] = [event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y];
                         element.array.value[1] = [event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y];
                         element.plot(element.array);
@@ -81,7 +88,7 @@
 
                         element.calc = function(event){
                             element.array.value.pop();
-                            element.array.value.push([event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y]);
+                            if(event)element.array.value.push([event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y]);
                             element.plot(element.array);
                         };
                         break;
@@ -111,11 +118,14 @@
 
 
             stop = function(event){
-                update(event);
+                if(event)update(event);
+
+                set.each(function(){ this.remove(); });
 
                 SVG.off(window, 'mousemove', element.moveHandler);
+                SVG.off(window, 'keydown', done);
+                SVG.off(window, 'keydown', cancel);
                 parent.off('click', start);
-
                 element.calc = null;
                 delete element.startParams;
                 delete element.moveHandler;
@@ -151,6 +161,17 @@
                 return element;
             };
 
+            done = function(event){
+                if(event && event.keyCode !== options.keyDone)return;
+                element.calc();
+                stop();
+            }
+
+            cancel = function(event){
+                if(event && event.keyCode !== options.keyCancel)return;
+                stop();
+                element.remove();
+            }
 
             drawCircles = function(array){
                 set.each(function(){ this.remove(); });
@@ -182,6 +203,16 @@
             if(!(event instanceof Event)){
                 options = event;
                 event = null;
+            }
+
+            if(options){
+                for(var i in defaults){
+                    if(options[i]){
+                        options[i] = defaults[i];
+                    }
+                }
+            }else{
+                options = defaults;
             }
 
             if(!event)parent.on('click', start);

@@ -46,3 +46,13 @@ Binding a function to the Event is easy
     rect.on('drawstart', function(event){
         console.log(e.detail); // Prints the position [x,y] where drawing started
     });
+
+
+# Options
+
+There are a few options available you can use. Each option is mostly only for special shapes
+
+- keyDone: For Polygon and Polyline. Finishs the shape (default = 13 = Enter)
+- keyCancel: Removes the Shape (default = 27 = escape)
+
+You can set this properties to null, if you want calling this yourself
