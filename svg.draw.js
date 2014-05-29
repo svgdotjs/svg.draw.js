@@ -97,20 +97,29 @@
                         draw = { cx:event.pageX, cy: event.pageY, rx:1, ry:1 };
                         element.attr(draw);
 
-                        element.calc = function(event){
-                            draw.cx = element.startParams.x - element.startParams.offset.x;
-                            draw.cy = element.startParams.y - element.startParams.offset.y;
-                            draw.rx = Math.abs(event.pageX - element.startParams.x);
-                            draw.ry = Math.abs(event.pageY - element.startParams.y);
-                            element.attr(draw);
-                        };
+                        if(defaults.useRadius)
+                            element.calc = function(event){
+                                draw.cx = element.startParams.x - element.startParams.offset.x;
+                                draw.cy = element.startParams.y - element.startParams.offset.y;
+                                draw.rx = draw.ry = Math.sqrt(
+                                    (event.pageX - element.startParams.x) * (event.pageX - element.startParams.x) +
+                                    (event.pageY - element.startParams.y) * (event.pageY - element.startParams.y)
+                                );
+                                element.attr(draw);
+                            };
+                        else
+                            element.calc = function(event){
+                                draw.cx = element.startParams.x - element.startParams.offset.x;
+                                draw.cy = element.startParams.y - element.startParams.offset.y;
+                                draw.rx = Math.abs(event.pageX - element.startParams.x);
+                                draw.ry = Math.abs(event.pageY - element.startParams.y);
+                                element.attr(draw);
+                            };
                         break;
                 }
 
 
                 element.node.dispatchEvent(new CustomEvent('drawstart', {detail:[event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y]}));
-
-
 
                 SVG.on(window, 'mousemove', function(event){update(event); element.moveHandler = arguments.callee});
                 return element;
@@ -162,13 +171,13 @@
             };
 
             done = function(event){
-                if(event && event.keyCode !== options.keyDone)return;
+                if(event && event.keyCode !== defaults.keyDone)return;
                 element.calc();
                 stop();
             }
 
             cancel = function(event){
-                if(event && event.keyCode !== options.keyCancel)return;
+                if(event && event.keyCode !== defaults.keyCancel)return;
                 stop();
                 element.remove();
             }
@@ -205,14 +214,8 @@
                 event = null;
             }
 
-            if(options){
-                for(var i in defaults){
-                    if(options[i]){
-                        options[i] = defaults[i];
-                    }
-                }
-            }else{
-                options = defaults;
+            for(var i in options){
+                defaults[i] = options[i];
             }
 
             if(!event)parent.on('click', start);
