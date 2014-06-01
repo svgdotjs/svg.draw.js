@@ -1,5 +1,4 @@
-// svg.draw.js 0.0.5 - Copyright (c) 2014 Wout Fierens - Licensed under the MIT license
-// extended by Urich-Matthias Schäfer (https://github.com/Fuzzyma)
+// svg.draw.js 0.1.0 - Copyright (c) 2014 Ulrich-Matthias Schäfer - Licensed under the MIT license
 
 // TODO: call cancel and done from out of the plugin
 
@@ -174,13 +173,13 @@
                 if(event && event.keyCode !== defaults.keyDone)return;
                 element.calc();
                 stop();
-            }
+            };
 
             cancel = function(event){
                 if(event && event.keyCode !== defaults.keyCancel)return;
                 stop();
                 element.remove();
-            }
+            };
 
             drawCircles = function(array){
                 set.each(function(){ this.remove(); });
@@ -215,6 +214,7 @@
             }
 
             for(var i in options){
+                if(!defaults[i])throw('Property '+i+'doesn\'t exists');
                 defaults[i] = options[i];
             }
 
