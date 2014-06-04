@@ -8,7 +8,7 @@
         // Draw element with mouse
         draw: function(event, options) {
 
-            var start, stop, point, update, done, cancel, drawCircles, defaults
+            var start, stop, point, update, done, cancel, drawCircles, snapToGrid, defaults
                 , element = this
                 , draw = {}
                 , parent = this.parent._parent(SVG.Nested) || this._parent(SVG.Doc)
@@ -17,7 +17,9 @@
             defaults = {
                 useRadius:false,
                 keyDone:13,
-                keyCancel:27
+                keyCancel:27,
+                snapToGrid:1
+                //FIXME: snapToGrid
             };
 
             if(this.calc === null)return element;  // This element was already drawn. You cant draw an element twice. Instead create a new one!
@@ -62,6 +64,7 @@
                             // Correcting the Position (absolute position of the element has to be kept in mind)
                             draw.x -= element.startParams.offset.x;
                             draw.y -= element.startParams.offset.y;
+                            snapToGrid(draw);
                             element.attr(draw);
                         };
                         break;
@@ -71,6 +74,7 @@
                             draw.y1 = element.startParams.y - element.startParams.offset.y;
                             draw.x2 = event.pageX - element.startParams.offset.x;
                             draw.y2 = event.pageY - element.startParams.offset.y;
+                            snapToGrid(draw);
                             element.attr(draw);
                         };
                         break;
@@ -79,21 +83,22 @@
 
                         SVG.on(window, 'keydown', done);
 
-                        element.array.value[0] = [event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y];
-                        element.array.value[1] = [event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y];
+                        element.array.value[0] = snapToGrid([event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y]);
+                        element.array.value[1] = snapToGrid([event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y]);
                         element.plot(element.array);
 
                         drawCircles(element.array.value);   // TODO: Just gimmick for now, maybe needed later
 
                         element.calc = function(event){
                             element.array.value.pop();
-                            if(event)element.array.value.push([event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y]);
+                            if(event)element.array.value.push(snapToGrid([event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y]));
                             element.plot(element.array);
                         };
                         break;
                     case 'ellipse':
 
                         draw = { cx:event.pageX, cy: event.pageY, rx:1, ry:1 };
+                        snapToGrid(draw);
                         element.attr(draw);
 
                         if(defaults.useRadius)
@@ -104,6 +109,7 @@
                                     (event.pageX - element.startParams.x) * (event.pageX - element.startParams.x) +
                                     (event.pageY - element.startParams.y) * (event.pageY - element.startParams.y)
                                 );
+                                snapToGrid(draw);
                                 element.attr(draw);
                             };
                         else
@@ -112,8 +118,10 @@
                                 draw.cy = element.startParams.y - element.startParams.offset.y;
                                 draw.rx = Math.abs(event.pageX - element.startParams.x);
                                 draw.ry = Math.abs(event.pageY - element.startParams.y);
+                                snapToGrid(draw);
                                 element.attr(draw);
                             };
+
                         break;
                 }
 
@@ -145,7 +153,7 @@
             point = function(event){
                 if(element.type == 'polyline' || element.type == 'polygon'){
                     var newPoint = [event.pageX - element.startParams.offset.x, event.pageY - element.startParams.offset.y];
-                    element.array.value.push(newPoint);
+                    element.array.value.push(snapToGrid(newPoint));
                     element.plot(element.array);
                     drawCircles(element.array.value);
 
@@ -189,6 +197,22 @@
                 }
             };
 
+            snapToGrid = function(draw){
+                if(draw.length){
+                    var temp = [draw[0] % defaults.snapToGrid, draw[1] % defaults.snapToGrid];
+                    draw[0] -= temp[0] < defaults.snapToGrid/2 ? temp[0] : temp[0]-defaults.snapToGrid;
+                    draw[1] -= temp[1] < defaults.snapToGrid/2 ? temp[1] : temp[1]-defaults.snapToGrid;
+                    return draw;
+                }
+
+                for(var i in draw){
+                    var temp = draw[i] % defaults.snapToGrid;
+                    draw[i] -= temp < defaults.snapToGrid/2 ? temp : temp-defaults.snapToGrid;
+                }
+
+                return draw;
+            };
+
             function offset(el){
                 var x = 0, y = 0;
 
@@ -214,7 +238,7 @@
             }
 
             for(var i in options){
-                if(!defaults[i])throw('Property '+i+'doesn\'t exists');
+                if(defaults[i] === undefined)throw('Property '+i+' doesn\'t exists');
                 defaults[i] = options[i];
             }
 

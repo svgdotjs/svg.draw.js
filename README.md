@@ -55,3 +55,4 @@ There are a few options available you can use. Each option is mostly only for sp
 - keyDone: For Polygon and Polyline. Finishs the shape (default = `13` = Enter)
 - keyCancel: Removes the Shape (default = `27` = escape)
 - useRadius: Draws a circle with using the mouseposition as radius not the x and y position itself
+- snapToGrid: Snaps the shape to a virtual grid while drawing (default `1`)
