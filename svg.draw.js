@@ -50,21 +50,30 @@
                             draw.height = event.pageY - draw.y;
                             draw.width = event.pageX - draw.x;
 
+                            // Correcting the Position (absolute position of the element has to be kept in mind)
+                            draw.x -= element.startParams.offset.x;
+                            draw.y -= element.startParams.offset.y;
+
+                            snapToGrid(draw);
+
+                            //if(draw.width == 0 || draw.height == 0)return;
 
                             if(draw.width < 1){
-                                draw.x = element.startParams.x + draw.width;
+                                //draw.x = element.startParams.x + draw.width;
+                                draw.x = draw.x + draw.width;
                                 draw.width = -draw.width;
                             }
 
                             if(draw.height < 1){
-                                draw.y = element.startParams.y + draw.height;
+                                //draw.y = element.startParams.y + draw.height;
+                                draw.y = draw.y + draw.height;
                                 draw.height = -draw.height;
                             }
 
                             // Correcting the Position (absolute position of the element has to be kept in mind)
-                            draw.x -= element.startParams.offset.x;
-                            draw.y -= element.startParams.offset.y;
-                            snapToGrid(draw);
+                            //draw.x -= element.startParams.offset.x;
+                            //draw.y -= element.startParams.offset.y;
+                            //snapToGrid(draw);
                             element.attr(draw);
                         };
                         break;
@@ -110,6 +119,7 @@
                                     (event.pageY - element.startParams.y) * (event.pageY - element.startParams.y)
                                 );
                                 snapToGrid(draw);
+                                //if(draw.rx == 0 || draw.ry == 0)return;
                                 element.attr(draw);
                             };
                         else
@@ -119,6 +129,7 @@
                                 draw.rx = Math.abs(event.pageX - element.startParams.x);
                                 draw.ry = Math.abs(event.pageY - element.startParams.y);
                                 snapToGrid(draw);
+                                //if(draw.rx == 0 || draw.ry == 0)return;
                                 element.attr(draw);
                             };
 
@@ -197,7 +208,7 @@
                 }
             };
 
-            snapToGrid = function(draw){
+            snapToGrid = function(draw, x, y){
                 if(draw.length){
                     var temp = [draw[0] % defaults.snapToGrid, draw[1] % defaults.snapToGrid];
                     draw[0] -= temp[0] < defaults.snapToGrid/2 ? temp[0] : temp[0]-defaults.snapToGrid;
@@ -206,8 +217,9 @@
                 }
 
                 for(var i in draw){
+                    console.log(i);
                     var temp = draw[i] % defaults.snapToGrid;
-                    draw[i] -= temp < defaults.snapToGrid/2 ? temp : temp-defaults.snapToGrid;
+                    draw[i] -= (temp < defaults.snapToGrid/2 ? temp : temp-defaults.snapToGrid) + (temp < 0 ? defaults.snapToGrid : 0);
                 }
 
                 return draw;
