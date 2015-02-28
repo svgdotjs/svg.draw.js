@@ -1,0 +1,41 @@
+{
+  "name": "svg.draw.js",
+  "version": "0.1.0",
+  "description": "An extension for svn.js which allows to draw elements with mouse",
+  "keywords": [
+    "svg.js",
+    "draw",
+    "mouse"
+  ],
+  "bugs": "https://github.com/Fuzzyma/svg.draw.js/issues",
+  "license": "MIT",
+  "author": {
+    "name": "Ulrich-Matthias Schäfer"
+  },
+  "contributors": {
+    "name": "Ulrich-Matthias Schäfer"
+  },
+  "homepage": "https://github.com/Fuzzyma/svg.draw.js",
+  "files": [
+    "dist/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fuzzyma/svg.draw.js.git"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-watch": "~0.4.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt": "~0.4.5",
+    "grunt-bumper": "^1.0.4"
+  },
+  "dependencies": {
+    "svg.js":"git://github.com/Fuzzyma/svg.js.git#fix-custom-events"
+  }
+}
