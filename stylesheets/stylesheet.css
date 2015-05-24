@@ -271,7 +271,7 @@ Full-Width Styles
   margin: 0 auto;
 }
 
-#forkme_banner {
+#forkme_banner, #demo_banner {
   display: block;
   position: absolute;
   top:0;
@@ -284,6 +284,12 @@ Full-Width Styles
   box-shadow: 0 0 10px rgba(0,0,0,.5);
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
+}
+
+#demo_banner{
+  right:191px;
+  padding-right:10px;
+  background:#0090ff no-repeat 95% 50%;
 }
 
 #header_wrap {
