@@ -1,4 +1,4 @@
-/*! svg.draw - v1.0.0 - 2015-05-23
+/*! svg.draw - v1.0.0 - 2015-05-24
 * https://github.com/Fuzzyma/svg.draw.js
 * Copyright (c) 2015 Ulrich-Matthias Schäfer; Licensed MIT */
 ;(function () {
@@ -35,14 +35,15 @@
         this.parameters = {};
         this.event = event;
         this.plugin = this.getPlugin();
-
+        this.options = {};
+        
         // Merge options and defaults
-        for (var i in options) {
-            if (!this.el.draw.defaults.hasOwnProperty(i)){ options[i] = this.el.draw.defaults[i]; }
+        for (var i in this.el.draw.defaults) {
+            this.options[i] = this.el.draw.defaults[i];
+            if(typeof options[i] !== 'undefined'){
+                this.options[i] = options[i];
+            }            
         }
-
-        this.options = options;
-
         // When we got an event, we use this for start, otherwise we use the click-event as default
         if (!event) {
             this.parent.on('click.draw', function (e) {
@@ -102,6 +103,8 @@
                         draw.height = -draw.height;
                     }
 
+                    
+                    
                     // draw the element
                     element.attr(draw);
                 };
@@ -256,7 +259,7 @@
     // Updates the element while moving the cursor
     PaintHandler.prototype.update = function (event) {
 
-        // Because we are nice we give you coords we nowhere need in this function anymore
+        // Because we are nice - we give you coords we nowhere need in this function anymore
         var updateParams = [ event.pageX - this.parameters.offset.x,
             event.pageY - this.parameters.offset.y ];
 
@@ -316,6 +319,10 @@
 
         return draw;
     };
+    
+    PaintHandler.prototype.param = function(key, value){
+        this.options[key] = value === null ? this.el.draw.defaults[key] : value;
+    };
 
     // Returns the plugin
     PaintHandler.prototype.getPlugin = function () {
@@ -326,7 +333,7 @@
 
     SVG.extend(SVG.Element, {
         // Draw element with mouse
-        draw: function (event, options) {
+        draw: function (event, options, value) {
 
             // sort the parameters
             if (!(event instanceof Event || typeof event === 'string')) {
@@ -339,7 +346,7 @@
 
             // if event is located in our PaintHandler we handle it as method
             if (paintHandler[event]) {
-                paintHandler[event](options);
+                paintHandler[event](options, value);
             }
 
             return this;

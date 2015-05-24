@@ -5,7 +5,7 @@ An extension of svn.js which allows to draw elements with your mouse
 
 # Get Started
 
-- Install svg.draw.js` using bower:
+- Install `svg.draw.js` using bower:
 
 		bower install svg.draw.js
 

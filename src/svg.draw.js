@@ -37,7 +37,7 @@
         // Merge options and defaults
         for (var i in this.el.draw.defaults) {
             this.options[i] = this.el.draw.defaults[i];
-            if(typeof options[i] != 'undefined'){
+            if(typeof options[i] !== 'undefined'){
                 this.options[i] = options[i];
             }            
         }
@@ -319,7 +319,7 @@
     
     PaintHandler.prototype.param = function(key, value){
         this.options[key] = value === null ? this.el.draw.defaults[key] : value;
-    }
+    };
 
     // Returns the plugin
     PaintHandler.prototype.getPlugin = function () {
