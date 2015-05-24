@@ -28,8 +28,17 @@
     <div class="box">
       <h2>Polygon, press Enter to finish the shape</h2>
       <code>
-        new SVG('polygon').size('100%', '100%')
+        var poly1 = new SVG('polygon').size('100%', '100%')
             .polygon().draw();
+            
+        poly1.on('drawstart', function(e){
+            document.addEventListener('keydown', function(e){
+                if(e.keyCode == 13){
+                    poly1.draw('done');
+                    poly1.off('drawstart');
+                }
+            });
+        });
       </code>
       <div id="polygon"></div>
     </div>
@@ -52,23 +61,32 @@
     <div class="box">
       <h2>Polygon, aligned at grig</h2>
       <code>
-        new SVG('polygonGrid').size('100%', '100%')
+        var poly2 = new SVG('polygonGrid').size('100%', '100%')
             .polygon().draw({snapToGrid:20})
+            
+        poly2.on('drawstart', function(e){
+            document.addEventListener('keydown', function(e){
+                if(e.keyCode == 13){
+                    poly2.draw('done');
+                    poly2.off('drawstart');
+                }
+            });
+        });
       </code>
       <div id="polygonGrid"></div>
     </div>
     <div class="box">
       <h2>Rectangle, mousedown/move/up to draw</h2>
       <code>
-        var rect = new SVG('rectNoClick')
-            .size('100%', '100%').rect();
+        var drawing = new SVG('rectNoClick').size('100%', '100%');
+        var rect = drawing.rect().attr('stroke-width',1).attr('fill','none');
 
-        document.addEventListener('mousedown', function(e){
+        drawing.on('mousedown', function(e){
             rect.draw(e);
         }, false);
 
-        document.addEventListener('mouseup', function(e){
-            rect.draw(e);
+        drawing.on('mouseup', function(e){
+            rect.draw('stop', e);
         }, false);
       </code>
       <div id="rectNoClick"></div>
@@ -85,12 +103,13 @@
         new SVG('circleUseRadius').size('100%', '100%').circle().draw({useRadius:true}).attr('stroke-width',1).attr('fill','none');
         var poly2 = new SVG('polygonGrid').size('100%', '100%').polygon().draw({snapToGrid:20}).attr('stroke-width',1).attr('fill','none');
         
-        var rect = new SVG('rectNoClick').size('100%', '100%').rect().attr('stroke-width',1).attr('fill','none');
-        document.addEventListener('mousedown', function(e){
+        var drawing = new SVG('rectNoClick').size('100%', '100%');
+        var rect = drawing.rect().attr('stroke-width',1).attr('fill','none');
+        drawing.on('mousedown', function(e){
             rect.draw(e);
         }, false);
 
-        document.addEventListener('mouseup', function(e){
+        drawing.on('mouseup', function(e){
             rect.draw('stop', e);
         }, false);
         

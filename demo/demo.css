@@ -38,6 +38,6 @@ h1{
     height:300px;
     margin:20px 0 0;
     border:1px solid black;
-    background:#fff;
+    background:url(grid.png) #fff;
     border-radius:10px;
 }
