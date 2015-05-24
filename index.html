@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Svg.draw.js : An extension of svn.js which allows to draw elements with mouse">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Svg.draw.js</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Fuzzyma/svg.draw.js">View on GitHub</a>
+
+          <h1 id="project_title">Svg.draw.js</h1>
+          <h2 id="project_tagline">An extension of svn.js which allows to draw elements with mouse</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Fuzzyma/svg.draw.js/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Fuzzyma/svg.draw.js/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="svgdrawjs" class="anchor" href="#svgdrawjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>svg.draw.js</h1>
+
+<p>An extension of svn.js which allows to draw elements with mouse</p>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<p>As default the drawing starts with a click on the svg-Element</p>
+
+<pre><code>var draw = SVG('drawing');
+draw.rect().draw();
+</code></pre>
+
+<p>You can use your own mouse-events. Just pass the event-Object to the draw-Function</p>
+
+<pre><code>var draw = SVG('drawing');
+var rect = draw.rect();
+
+draw.on('mousedown', function(event){
+    rect.draw(event);
+});
+draw.on('mouseup', function(event){
+    rect.draw(event);
+});
+</code></pre>
+
+<h1>
+<a id="events" class="anchor" href="#events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events</h1>
+
+<p>There are 4 events to which you can bind functions</p>
+
+<ul>
+<li>drawstart</li>
+<li>drawstop</li>
+<li>drawudpdate</li>
+<li>drawpoint</li>
+</ul>
+
+<p>Drawpoint is triggered on shapes like polygons and polylines.</p>
+
+<p>Each event-object holds the relative position to the parent-Object of the Shape (which is mostly the SVG-doc itself) as Array</p>
+
+<p>Binding a function to the Event is easy</p>
+
+<pre><code>var draw = SVG('drawing');
+draw.rect().draw();
+rect.on('drawstart', function(event){
+    console.log(e.detail); // Prints the position [x,y] where drawing started
+});
+</code></pre>
+
+<h1>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h1>
+
+<p>There are a few options available you can use. Each option is mostly only for special shapes</p>
+
+<ul>
+<li>keyDone: For Polygon and Polyline. Finishs the shape (default = <code>13</code> = Enter)</li>
+<li>keyCancel: Removes the Shape (default = <code>27</code> = escape)</li>
+<li>useRadius: Draws a circle with using the mouseposition as radius not the x and y position itself</li>
+<li>snapToGrid: Snaps the shape to a virtual grid while drawing (default <code>1</code>)</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Svg.draw.js maintained by <a href="https://github.com/Fuzzyma">Fuzzyma</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
