@@ -3,6 +3,10 @@ svg.draw.js
 
 An extension of svn.js which allows to draw elements with your mouse
 
+# Demo
+
+For a demo see http://fuzzyma.github.io/svg.draw.js/
+
 # Get Started
 
 - Install `svg.draw.js` using bower:
