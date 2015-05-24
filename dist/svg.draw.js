@@ -36,13 +36,13 @@
         this.event = event;
         this.plugin = this.getPlugin();
         this.options = {};
-        
+
         // Merge options and defaults
         for (var i in this.el.draw.defaults) {
             this.options[i] = this.el.draw.defaults[i];
-            if(typeof options[i] !== 'undefined'){
+            if (typeof options[i] !== 'undefined') {
                 this.options[i] = options[i];
-            }            
+            }
         }
         // When we got an event, we use this for start, otherwise we use the click-event as default
         if (!event) {
@@ -50,9 +50,9 @@
                 _this.start(e || window.event);
             });
         }
-        else {
-            this.start(event);
-        }
+        /*else {
+         this.start(event);
+         }*/
 
     }
 
@@ -91,20 +91,16 @@
                     // When width is less than one, we have to draw to the left
                     // which means we have to move the start-point to the left
                     if (draw.width < 1) {
-                        //draw.x = parameters.x + draw.width;
                         draw.x = draw.x + draw.width;
                         draw.width = -draw.width;
                     }
 
                     // ...same with height
                     if (draw.height < 1) {
-                        //draw.y = parameters.y + draw.height;
                         draw.y = draw.y + draw.height;
                         draw.height = -draw.height;
                     }
 
-                    
-                    
                     // draw the element
                     element.attr(draw);
                 };
@@ -127,9 +123,6 @@
             case 'polyline':
             case 'polygon':
 
-                // Bind the done-function to our done-key
-                //SVG.on(window, 'keydown.draw', function(e){ _this.done(e); });
-
                 // When we draw a polygon, we immediately need 2 points.
                 // One start-point and one point at the mouse-position
                 element.array.value[0] = this.snapToGrid([event.pageX - this.parameters.offset.x, event.pageY - this.parameters.offset.y]);
@@ -143,7 +136,9 @@
                 // The calc-function sets the position of the last point to the mouse-position (with offset ofc)
                 this.calc = function (event) {
                     element.array.value.pop();
-                    if (event) {element.array.value.push(this.snapToGrid([event.pageX - this.parameters.offset.x, event.pageY - this.parameters.offset.y])); }
+                    if (event) {
+                        element.array.value.push(this.snapToGrid([event.pageX - this.parameters.offset.x, event.pageY - this.parameters.offset.y]));
+                    }
                     element.plot(element.array);
                 };
                 break;
@@ -157,7 +152,7 @@
                 element.attr(draw);
 
                 // When using the cursor-position as radius, we can only draw circles
-                if (this.options.useRadius){
+                if (this.options.useRadius) {
                     this.calc = function (event) {
                         draw.cx = this.parameters.x - this.parameters.offset.x;
                         draw.cy = this.parameters.y - this.parameters.offset.y;
@@ -170,8 +165,8 @@
                         this.snapToGrid(draw);
                         element.attr(draw);
                     };
-                // otherwise we threat the cursor-position as width and height of the circle/ellipse
-                }else{
+                    // otherwise we threat the cursor-position as width and height of the circle/ellipse
+                } else {
                     this.calc = function (event) {
                         draw.cx = this.parameters.x - this.parameters.offset.x;
                         draw.cy = this.parameters.y - this.parameters.offset.y;
@@ -234,7 +229,9 @@
 
     // The stop-function does the cleanup work
     PaintHandler.prototype.stop = function (event) {
-        if (event){ this.update(event); }
+        if (event) {
+            this.update(event);
+        }
 
         // Remove all circles
         this.set.each(function () {
@@ -319,16 +316,14 @@
 
         return draw;
     };
-    
-    PaintHandler.prototype.param = function(key, value){
+
+    PaintHandler.prototype.param = function (key, value) {
         this.options[key] = value === null ? this.el.draw.defaults[key] : value;
     };
 
     // Returns the plugin
     PaintHandler.prototype.getPlugin = function () {
-
         return this.el.draw.plugins[this.el.type];
-
     };
 
     SVG.extend(SVG.Element, {
@@ -343,6 +338,11 @@
 
             // get the old Handler or create a new one from event and options
             var paintHandler = this.remember('_paintHandler') || new PaintHandler(this, event, options || {});
+
+            // When we got an event we have to start/continue drawing
+            if (event instanceof Event) {
+                paintHandler['start'](event);
+            }
 
             // if event is located in our PaintHandler we handle it as method
             if (paintHandler[event]) {
