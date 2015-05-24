@@ -1,13 +1,13 @@
 {
   "name": "svg.draw.js",
-  "version": "0.1.0",
-  "homepage": "https://github.com/Fuzzyma/yalb",
+  "version": "1.0.0",
+  "homepage": "https://github.com/Fuzzyma/svg.draw.js",
   "authors": [
     "Ulrich-Matthias Schäfer"
   ],
   "description": "An extension for svn.js which allows to draw elements with mouse",
   "main": [
-    "./src/svg.draw.js"
+    "./dist/svg.draw.js"
   ],
   "keywords": [
     "svg.js",
@@ -23,6 +23,6 @@
     "tests"
   ],
   "dependencies": {
-    "svg.js":"git://github.com/Fuzzyma/svg.js.git#fix-custom-events"
+    "svg.js":"1.x.x"
   }
 }
