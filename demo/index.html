@@ -20,7 +20,7 @@
       <h2>Rectangle, click to draw</h2>
       <code>
         new SVG('rect').size('100%', '100%')
-            .rect().draw()
+            .rect().draw();
       </code>
       <div id="rect"></div>
     </div>
@@ -54,7 +54,7 @@
       <h2>Circle, click to draw</h2>
       <code>
         new SVG('circleUseRadius').size('100%', '100%')
-            .circle().draw({useRadius:true})
+            .circle().draw({useRadius:true});
       </code>
       <div id="circleUseRadius"></div>
     </div>
@@ -62,7 +62,7 @@
       <h2>Polygon, aligned at grig</h2>
       <code>
         var poly2 = new SVG('polygonGrid').size('100%', '100%')
-            .polygon().draw({snapToGrid:20})
+            .polygon().draw({snapToGrid:20});
             
         poly2.on('drawstart', function(e){
             document.addEventListener('keydown', function(e){
@@ -79,7 +79,7 @@
       <h2>Rectangle, mousedown/move/up to draw</h2>
       <code>
         var drawing = new SVG('rectNoClick').size('100%', '100%');
-        var rect = drawing.rect().attr('stroke-width',1).attr('fill','none');
+        var rect = drawing.rect();
 
         drawing.on('mousedown', function(e){
             rect.draw(e);
