@@ -21,8 +21,8 @@ module.exports = function(grunt) {
         stripBanners: true
       },
       dist: {
-        src: ['src/<%= pkg.name %>.js'],
-        dest: 'dist/<%= pkg.name %>.js'
+        src: ['src/<%= fileName %>.js'],
+        dest: 'dist/<%= fileName %>.js'
       },
     },
     uglify: {
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: '<%= concat.dist.dest %>',
-        dest: 'dist/<%= pkg.name %>.min.js'
+        dest: 'dist/<%= fileName %>.min.js'
       },
     },
     jshint: {
@@ -60,6 +60,8 @@ module.exports = function(grunt) {
       }
     },
   });
+  
+  grunt.config('fileName', grunt.config('pkg').name.slice(0, -3));
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');

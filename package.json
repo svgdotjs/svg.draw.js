@@ -1,5 +1,5 @@
 {
-  "name": "svg.draw",
+  "name": "svg.draw.js",
   "version": "1.0.0",
   "description": "An extension for svg.js which allows to draw elements with mouse",
   "keywords": [
@@ -36,6 +36,6 @@
     "grunt-bumper": "^1.0.4"
   },
   "dependencies": {
-    "svg.js":"git://github.com/wout/svg.js.git"
+    "svg.js":"1.1.x"
   }
 }

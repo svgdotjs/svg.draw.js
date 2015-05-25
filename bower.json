@@ -23,6 +23,6 @@
     "tests"
   ],
   "dependencies": {
-    "svg.js":"1.x.x"
+    "svg.js":"1.1.x"
   }
 }
