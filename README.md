@@ -1,7 +1,7 @@
 svg.draw.js
 ===========
 
-An extension of svn.js which allows to draw elements with your mouse
+An extension of [svn.js](https://github.com/wout/svg.js) which allows to draw elements with your mouse
 
 # Demo
 
