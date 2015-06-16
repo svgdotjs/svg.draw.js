@@ -8,7 +8,6 @@
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    
     <title>Svg.draw.js</title>
   </head>
 
@@ -17,7 +16,6 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          <a id="demo_banner" href="demo/index.html">View Demo</a>
           <a id="forkme_banner" href="https://github.com/Fuzzyma/svg.draw.js">View on GitHub</a>
 
           <h1 id="project_title">Svg.draw.js</h1>
@@ -37,6 +35,11 @@
 <a id="svgdrawjs" class="anchor" href="#svgdrawjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>svg.draw.js</h1>
 
 <p>An extension of <a href="https://github.com/wout/svg.js">svg.js</a> which allows to draw elements with your mouse</p>
+
+<h1>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h1>
+
+<p>For a demo see <a href="http://fuzzyma.github.io/svg.draw.js/">http://fuzzyma.github.io/svg.draw.js/</a></p>
 
 <h1>
 <a id="get-started" class="anchor" href="#get-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get Started</h1>
@@ -122,9 +125,6 @@ polygon.draw('stop', event)
 
 <ul>
 <li>
-<code>useRadius</code>: Only used for ellipse - Use the mouseposition to calculate the radius. <br>
-If <code>false</code> the mouse position will be corner of the bounding-box of the ellipse (default)</li>
-<li>
 <code>snapToGrid</code>: Specifies a grid to which a point is aligned (<code>default:1</code>)</li>
 </ul>
 
@@ -153,77 +153,66 @@ If <code>false</code> the mouse position will be corner of the bounding-box of t
 <pre><code>var draw = SVG('drawing');
 draw.rect().draw();
 rect.on('drawstart', function(event){
-    console.log(e.detail); // Prints the position [x,y] where drawing started
+    console.log(e.detail); // Holds event, current Point-coords and matrix
 });
 </code></pre>
 
 <h1>
 <a id="plugins" class="anchor" href="#plugins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plugins</h1>
 
-<p>Currently <code>svg.draw.js</code> only supports all the basic shapes (line, polyline, polygone, rect, ellipse).
+<p>Currently <code>svg.draw.js</code> only supports all the basic shapes (line, polyline, polygone, rect, image, circle, ellipse).
 Any other type you want to draw and is available through <code>SVG.invent</code> (e.g. image or your own element) can be added using a plugin which just serves the functions to draw the shape.</p>
 
-<p>Here is an example for implementing the image-node-drawing (which is basically the same implementation as the rectangle):</p>
+<p>For example:</p>
 
-<pre><code>//svg.draw.image.js
+<pre><code>SVG.Element.prototype.draw.extend('line polyline polygon', {
 
-;(function(plugins){
-
-plugins.image = {
-
-    init:function(event){
-        var draw = { x: event.pageX, y: event.pageY, height: 1, width: 1 };
-        this.el.attr(draw);
-    }, 
-
-    calc:function(event){
-
-        var draw = {
-            x = this.parameters.x,
-            y = this.parameters.y,
-            height = this.parameters.height,
-            width = this.parameters.width
-        }
-
-        // Correct the Position
-        // the cursor-position is absolute to the html-document but our parent-element is not
-        draw.x -= this.parameters.offset.x;
-        draw.y -= this.parameters.offset.y;
-
-        // Snap the params to the grid we specified
-        this.snapToGrid(draw);
-
-        // When width is less than one, we have to draw to the left
-        // which means we have to move the start-point to the left
-        if (draw.width &lt; 1) {
-            //draw.x = parameters.x + draw.width;
-            draw.x = draw.x + draw.width;
-            draw.width = -draw.width;
-        }
-
-        // ...same with height
-        if (draw.height &lt; 1) {
-            //draw.y = parameters.y + draw.height;
-            draw.y = draw.y + draw.height;
-            draw.height = -draw.height;
-        }
-
-        // draw the element
-        this.el.attr(draw);
+    // add methods here which should be added to the draw-object
+    // e.g.
+    foo: function(){
+        // can access this
     }
 
-    /*
-    ** Point is needed when you need multiple "clicks" to define the shape (e.g. polygon)
-    point:function(event){
+    // or even variables
+    bar:5
 
-    }
-    */
 }
-
-})(SVG.Element.prototype.draw.plugins)
 </code></pre>
 
-<p><strong>Note</strong>: To implement the snapToGrid-feature you can use the function <code>this.snapToGrid</code> which takes an array or object and align all members to the grid specified in options. It returns the changed Array/Object</p>
+<p>Method <code>calc</code> is always needed which updates the point of the shape.</p>
+
+<p>You also can extend two shape-types at once:</p>
+
+<pre><code>SVG.Element.prototype.draw.extend({
+
+    'line polyline polygon': {
+        // add methods here which should be added to the draw-object
+        // e.g.
+        foo: function(){
+            // can access this
+        }
+
+        // or even variables
+        bar:5
+    }
+
+
+    'circle':{
+        // something
+    }
+}
+</code></pre>
+
+<p>See the implementation of all shapes as examples.</p>
+
+<h1>
+<a id="changes-in-svgdrawjs-v2" class="anchor" href="#changes-in-svgdrawjs-v2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changes in svg.draw.js v2</h1>
+
+<ul>
+<li>all shapes implemented as plugins</li>
+<li>drawing takes transformations into account (you can even draw e.g. a rotated rectangle)</li>
+<li>useRadius option is obsolete duo to the implementation of circle in svg.js v2</li>
+</ul>
       </section>
     </div>
 
