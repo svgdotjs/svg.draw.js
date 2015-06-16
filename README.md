@@ -76,8 +76,6 @@ See the next chapter for that.
 
 The following options can be used to modify the behavior of the addon:
 
-- `useRadius`: Only used for ellipse - Use the mouseposition to calculate the radius. <br>
-   If `false` the mouse position will be corner of the bounding-box of the ellipse (default)
 - `snapToGrid`: Specifies a grid to which a point is aligned (`default:1`)
 
 **Note** that you can specify the options only on the first call. When you want to change the options while drawing use `polygon.draw('params', key, value)` This is useful when you want to activate the grid-option when ctrl or soemthing is pressed.
@@ -102,71 +100,58 @@ Binding a function to the Event is easy
     var draw = SVG('drawing');
     draw.rect().draw();
     rect.on('drawstart', function(event){
-        console.log(e.detail); // Prints the position [x,y] where drawing started
+        console.log(e.detail); // Holds event, current Point-coords and matrix
     });
 
 # Plugins
 
-Currently `svg.draw.js` only supports all the basic shapes (line, polyline, polygone, rect, ellipse).
+Currently `svg.draw.js` only supports all the basic shapes (line, polyline, polygone, rect, image, circle, ellipse).
 Any other type you want to draw and is available through `SVG.invent` (e.g. image or your own element) can be added using a plugin which just serves the functions to draw the shape.
 
-Here is an example for implementing the image-node-drawing (which is basically the same implementation as the rectangle):
+For example:
 
-	//svg.draw.image.js
-	
-	;(function(plugins){
-	
-	plugins.image = {
-	
-	    init:function(event){
-	        var draw = { x: event.pageX, y: event.pageY, height: 1, width: 1 };
-	        this.el.attr(draw);
-	    }, 
-	    
-	    calc:function(event){
-	        
-			var draw = {
-				x = this.parameters.x,
-				y = this.parameters.y,
-				height = this.parameters.height,
-				width = this.parameters.width
+
+    SVG.Element.prototype.draw.extend('line polyline polygon', {
+
+		// add methods here which should be added to the draw-object
+		// e.g.
+		foo: function(){
+			// can access this
+		}
+
+		// or even variables
+		bar:5
+
+	}
+
+Method `calc` is always needed which updates the point of the shape.
+
+You also can extend two shape-types at once:
+
+    SVG.Element.prototype.draw.extend({
+
+		'line polyline polygon': {
+			// add methods here which should be added to the draw-object
+			// e.g.
+			foo: function(){
+				// can access this
 			}
 
-	        // Correct the Position
-	        // the cursor-position is absolute to the html-document but our parent-element is not
-	        draw.x -= this.parameters.offset.x;
-	        draw.y -= this.parameters.offset.y;
-	
-	        // Snap the params to the grid we specified
-	        this.snapToGrid(draw);
-	
-	        // When width is less than one, we have to draw to the left
-	        // which means we have to move the start-point to the left
-	        if (draw.width < 1) {
-	            //draw.x = parameters.x + draw.width;
-	            draw.x = draw.x + draw.width;
-	            draw.width = -draw.width;
-	        }
-	
-	        // ...same with height
-	        if (draw.height < 1) {
-	            //draw.y = parameters.y + draw.height;
-	            draw.y = draw.y + draw.height;
-	            draw.height = -draw.height;
-	        }
-	
-	        // draw the element
-	        this.el.attr(draw);
-	    }
-
-		/*
-		** Point is needed when you need multiple "clicks" to define the shape (e.g. polygon)
-		point:function(event){
-
+			// or even variables
+			bar:5
 		}
-		*/
-	}
-	
-	})(SVG.Element.prototype.draw.plugins)
 
-**Note**: To implement the snapToGrid-feature you can use the function `this.snapToGrid` which takes an array or object and align all members to the grid specified in options. It returns the changed Array/Object
+
+		'circle':{
+			// something
+		}
+	}
+
+See the implementation of all shapes as examples.
+
+
+# Changes in svg.draw.js v2
+
+- all shapes implemented as plugins
+- drawing takes transformations into account (you can even draw e.g. a rotated rectangle)
+- useRadius option is obsolete duo to the implementation of circle in svg.js v2

@@ -17,11 +17,13 @@ module.exports = function(grunt) {
     },
     concat: {
       options: {
-        banner: '<%= banner %>',
-        stripBanners: true
+        banner: '<%= banner %>\n;(function () {\n',
+        stripBanners: true,
+        separator:'\n\n',
+        footer:'\n}).call(this);'
       },
       dist: {
-        src: ['src/<%= fileName %>.js'],
+        src: ['src/svg.draw.js', 'src/rectable.js', 'src/lineable.js', 'src/circle.js', 'src/ellipse.js'],
         dest: 'dist/<%= fileName %>.js'
       },
     },
@@ -46,13 +48,10 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      gruntfile: {
-        files: '<%= jshint.gruntfile.src %>',
-        tasks: ['jshint:gruntfile']
+      scripts: {
+        files: ['src/*.js'],
+        tasks: ['default']
       },
-      src: {
-        files: '<%= jshint.src.src %>'
-      }
     },
     bumper: {
       options: {
@@ -72,6 +71,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bumper');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'clean', 'concat', 'uglify']);
+  grunt.registerTask('default', ['clean', 'concat', 'uglify']);
 
 };
