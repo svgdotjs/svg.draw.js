@@ -16,6 +16,7 @@
         this.p = this.parent.node.createSVGPoint(); // Helping point for coord transformation
         this.m = null;  // transformation matrix. We get it when drawing starts
         this.startPoint = null;
+        this.lastUpdateCall = null;
         this.options = {};
 
         // Merge options and defaults
@@ -118,6 +119,12 @@
     // Updates the element while moving the cursor
     PaintHandler.prototype.update = function (event) {
 
+        if(!event && this.lastUpdateCall){
+            event = this.lastUpdateCall;
+        }
+        
+        this.lastUpdateCall = event;
+    
         // Call the calc-function which calculates the new position and size
         this.calc(event);
 
@@ -166,6 +173,7 @@
 
     PaintHandler.prototype.param = function (key, value) {
         this.options[key] = value === null ? this.el.draw.defaults[key] : value;
+        this.update();
     };
 
     // Returns the plugin
