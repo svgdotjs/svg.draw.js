@@ -33,7 +33,7 @@ h1{
     white-space:pre;
 }
 
-#rect, #polygon, #circle, #circleUseRadius, #polygonGrid, #rectNoClick{
+.box div{
     width:700px;
     height:300px;
     margin:20px 0 0;
