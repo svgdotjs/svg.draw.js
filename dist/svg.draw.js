@@ -1,6 +1,6 @@
-/*! svg.draw.js - v2.0.0 - 2015-06-17
+/*! svg.draw.js - v2.0.1 - 2016-04-28
 * https://github.com/Fuzzyma/svg.draw.js
-* Copyright (c) 2015 Ulrich-Matthias Schäfer; Licensed MIT */
+* Copyright (c) 2016 Ulrich-Matthias Schäfer; Licensed MIT */
 
 ;(function () {
     // Our Object which manages drawing
