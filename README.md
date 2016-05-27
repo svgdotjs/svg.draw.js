@@ -86,7 +86,7 @@ The following options can be used to modify the behavior of the addon:
 
 - drawstart
 - drawstop
-- drawudpdate
+- drawupdate
 - drawpoint
 - drawdone
 - drawcancel
