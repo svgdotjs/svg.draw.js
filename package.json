@@ -7,7 +7,7 @@
     "draw",
     "mouse"
   ],
-  "bugs": "https://github.com/Fuzzyma/svg.draw.js/issues",
+  "bugs": "https://github.com/svgdotjs/svg.draw.js/issues",
   "license": "MIT",
   "author": {
     "name": "Ulrich-Matthias Schäfer"
@@ -15,14 +15,14 @@
   "contributors": {
     "name": "Ulrich-Matthias Schäfer"
   },
-  "homepage": "https://github.com/Fuzzyma/svg.draw.js",
+  "homepage": "https://github.com/svgdotjs/svg.draw.js",
   "main": "dist/svg.draw.js",
   "files": [
     "dist/"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Fuzzyma/svg.draw.js.git"
+    "url": "https://github.com/svgdotjs/svg.draw.js.git"
   },
   "engines": {
     "node": ">= 0.8.0"

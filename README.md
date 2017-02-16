@@ -1,11 +1,11 @@
 svg.draw.js
 ===========
 
-An extension of [svg.js](https://github.com/wout/svg.js) which allows to draw elements with your mouse
+An extension of [svg.js](https://github.com/svgdotjs/svg.js) which allows to draw elements with your mouse
 
 # Demo
 
-For a demo see http://fuzzyma.github.io/svg.draw.js/
+For a demo see http://svgdotjs.github.io/svg.draw.js/
 
 # Get Started
 
