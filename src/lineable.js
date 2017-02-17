@@ -78,19 +78,14 @@
 
             this.set.clear();
             
-            var offset = this.parent.node.getBoundingClientRect();
-            
-            offset.x -= (this.offset.x - window.pageXOffset)
-            offset.y -= (this.offset.y - window.pageYOffset)
-            
             for (var i = 0; i < array.length; ++i) {
             
                 this.p.x = array[i][0]
                 this.p.y = array[i][1]
                 
-                var p = this.p.matrixTransform(this.m.inverse());
+                var p = this.p.matrixTransform(this.parent.node.getScreenCTM().inverse().multiply(this.el.node.getScreenCTM()));
             
-                this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x - offset.x, p.y - offset.y));
+                this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
             }
         }
         

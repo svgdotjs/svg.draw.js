@@ -1,6 +1,6 @@
-/*! svg.draw.js - v2.0.1 - 2016-04-28
-* https://github.com/Fuzzyma/svg.draw.js
-* Copyright (c) 2016 Ulrich-Matthias Schäfer; Licensed MIT */
+/*! svg.draw.js - v2.0.1 - 2017-02-17
+* https://github.com/svgdotjs/svg.draw.js
+* Copyright (c) 2017 Ulrich-Matthias Schäfer; Licensed MIT */
 
 ;(function () {
     // Our Object which manages drawing
@@ -282,7 +282,6 @@
         init:function(e){
             // When we draw a polygon, we immediately need 2 points.
             // One start-point and one point at the mouse-position
-            
             this.set = new SVG.Set();
             
             var p = this.startPoint,
@@ -357,19 +356,14 @@
 
             this.set.clear();
             
-            var offset = this.parent.node.getBoundingClientRect();
-            
-            offset.x -= (this.offset.x - window.pageXOffset)
-            offset.y -= (this.offset.y - window.pageYOffset)
-            
             for (var i = 0; i < array.length; ++i) {
             
                 this.p.x = array[i][0]
                 this.p.y = array[i][1]
                 
-                var p = this.p.matrixTransform(this.m.inverse());
+                var p = this.p.matrixTransform(this.parent.node.getScreenCTM().inverse().multiply(this.el.node.getScreenCTM()));
             
-                this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x - offset.x, p.y - offset.y));
+                this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
             }
         }
         
