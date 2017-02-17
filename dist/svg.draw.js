@@ -1,4 +1,4 @@
-/*! svg.draw.js - v2.0.1 - 2017-02-17
+/*! svg.draw.js - v2.0.2 - 2017-02-17
 * https://github.com/svgdotjs/svg.draw.js
 * Copyright (c) 2017 Ulrich-Matthias Schäfer; Licensed MIT */
 
@@ -282,6 +282,7 @@
         init:function(e){
             // When we draw a polygon, we immediately need 2 points.
             // One start-point and one point at the mouse-position
+            
             this.set = new SVG.Set();
             
             var p = this.startPoint,
