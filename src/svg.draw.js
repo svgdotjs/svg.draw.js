@@ -22,6 +22,11 @@
             }
         }
         
+        if(plugin.point) {
+          plugin['pointPlugin'] = plugin.point;
+          delete plugin.point;
+        }
+        
         // Import all methods from plugin into object
         for (var i in plugin){
             this[i] = plugin[i];
@@ -82,6 +87,12 @@
     // This function draws a point if the element is a polyline or polygon
     // Otherwise it will just stop drawing the shape cause we are done
     PaintHandler.prototype.point = function (event) {
+        if (this.point != this.start) return this.start(event);
+        
+        if (this.pointPlugin) {
+            return this.pointPlugin(event);
+        }
+    
         // If this function is not overwritten we just call stop
         this.stop(event);
     };
