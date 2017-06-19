@@ -253,7 +253,7 @@
 
             var p = this.startPoint;
             
-            this.el.attr({ x: p.x, y: p.y, height: 1, width: 1 });
+            this.el.attr({ x: p.x, y: p.y, height: 0, width: 0 });
         },
         
         calc:function (e) {
