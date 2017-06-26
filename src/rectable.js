@@ -4,7 +4,7 @@
 
             var p = this.startPoint;
             
-            this.el.attr({ x: p.x, y: p.y, height: 1, width: 1 });
+            this.el.attr({ x: p.x, y: p.y, height: 0, width: 0 });
         },
         
         calc:function (e) {
@@ -20,15 +20,15 @@
             // Snap the params to the grid we specified
             this.snapToGrid(rect);
 
-            // When width is less than one, we have to draw to the left
+            // When width is less than zero, we have to draw to the left
             // which means we have to move the start-point to the left
-            if (rect.width < 1) {
+            if (rect.width < 0) {
                 rect.x = rect.x + rect.width;
                 rect.width = -rect.width;
             }
 
             // ...same with height
-            if (rect.height < 1) {
+            if (rect.height < 0) {
                 rect.y = rect.y + rect.height;
                 rect.height = -rect.height;
             }
