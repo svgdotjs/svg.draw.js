@@ -130,6 +130,10 @@
         }
         
         this.lastUpdateCall = event;
+        
+        // Get the current transform matrix
+        // it could have been changed since the start or the last update call
+        this.m = this.el.node.getScreenCTM().inverse();
     
         // Call the calc-function which calculates the new position and size
         this.calc(event);
