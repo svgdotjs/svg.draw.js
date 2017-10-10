@@ -61,13 +61,15 @@
         clean:function(){
 
             // Remove all circles
-            this.set.each(function () {
-                this.remove();
-            });
+            if (this.set) {
+                this.set.each(function () {
+                    this.remove();
+                });
 
-            this.set.clear();
+                this.set.clear();
 
-            delete this.set;
+                delete this.set;                
+            }
 
         },
 
