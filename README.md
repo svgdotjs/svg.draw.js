@@ -30,20 +30,20 @@ For a demo see http://svgdotjs.github.io/svg.draw.js/
 As default the drawing starts with a click on the svg-Element
 
 
-    var draw = SVG('drawing');
-    draw.rect().draw(options);
+    var drawing = SVG('drawing');
+    drawing.rect().draw(options);
 
 
 You can use your own mouse-events. Just pass the event-Object to the draw-Function
 
 
     var drawing = SVG('myDrawing');
-    var rect = draw.rect();
+    var rect = drawing.rect();
 
-    draw.on('mousedown', function(event){
+    drawing.on('mousedown', function(event){
         rect.draw(event, options);
     });
-    draw.on('mouseup', function(event){
+    drawing.on('mouseup', function(event){
         rect.draw(event);
     });
 
