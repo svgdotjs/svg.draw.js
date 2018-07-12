@@ -80,7 +80,7 @@
 
             this.set.clear();
 
-            for (var i = 0; i < array.length; ++i) {
+            for (var i = 0; i < array.length - 1; ++i) {
 
                 this.p.x = array[i][0]
                 this.p.y = array[i][1]
@@ -89,6 +89,14 @@
 
                 this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
             }
-        }
+        },
 
+        undo:function() {
+            if (this.set.length()) {
+                this.set.members.splice(-1, 1)[0].remove();
+                this.el.array().value.splice(-2, 1);
+                this.el.plot(this.el.array());
+                this.el.fire('undopoint');
+            }
+        },
     });
