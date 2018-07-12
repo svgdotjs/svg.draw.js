@@ -13,6 +13,7 @@
         this.startPoint = null;
         this.lastUpdateCall = null;
         this.options = {};
+        this.set = new SVG.Set();
 
         // Merge options and defaults
         for (var i in this.el.draw.defaults) {
