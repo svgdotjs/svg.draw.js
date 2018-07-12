@@ -1,4 +1,4 @@
-/*! svg.draw.js - v2.0.3 - 2017-06-19
+/*! svg.draw.js - v2.0.3 - 2017-07-21
 * https://github.com/svgdotjs/svg.draw.js
 * Copyright (c) 2017 Ulrich-Matthias Schäfer; Licensed MIT */
 
@@ -135,6 +135,10 @@
         }
         
         this.lastUpdateCall = event;
+        
+        // Get the current transform matrix
+        // it could have been changed since the start or the last update call
+        this.m = this.el.node.getScreenCTM().inverse();
     
         // Call the calc-function which calculates the new position and size
         this.calc(event);
