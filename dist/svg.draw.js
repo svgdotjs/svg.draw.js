@@ -1,6 +1,6 @@
-/*! svg.draw.js - v2.0.3 - 2017-07-21
+/*! svg.draw.js - v2.0.3 - 2018-07-23
 * https://github.com/svgdotjs/svg.draw.js
-* Copyright (c) 2017 Ulrich-Matthias Schäfer; Licensed MIT */
+* Copyright (c) 2018 Ulrich-Matthias Schäfer; Licensed MIT */
 
 ;(function () {
     // Our Object which manages drawing
@@ -18,6 +18,7 @@
         this.startPoint = null;
         this.lastUpdateCall = null;
         this.options = {};
+        this.set = new SVG.Set();
 
         // Merge options and defaults
         for (var i in this.el.draw.defaults) {
@@ -251,6 +252,7 @@
     // Container for all types not specified here
     SVG.Element.prototype.draw.plugins = {};
 
+
     SVG.Element.prototype.draw.extend('rect image', {
     
         init:function(e){
@@ -327,7 +329,7 @@
             }
 
             this.el.plot(arr);
-
+            this.drawCircles();
         },
 
         point:function(e){
@@ -384,9 +386,18 @@
 
                 this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
             }
-        }
+        },
 
+        undo:function() {
+            if (this.set.length()) {
+                this.set.members.splice(-2, 1)[0].remove();
+                this.el.array().value.splice(-2, 1);
+                this.el.plot(this.el.array());
+                this.el.fire('undopoint');
+            }
+        },
     });
+
 
     SVG.Element.prototype.draw.extend('circle', {
     
