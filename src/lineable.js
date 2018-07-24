@@ -60,6 +60,8 @@
 
         clean:function(){
 
+            if (!this.set) { return; }
+
             // Remove all circles
             this.set.each(function () {
                 this.remove();
