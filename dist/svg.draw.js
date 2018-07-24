@@ -1,4 +1,4 @@
-/*! svg.draw.js - v2.0.3 - 2018-07-23
+/*! svg.draw.js - v2.0.3 - 2018-07-24
 * https://github.com/svgdotjs/svg.draw.js
 * Copyright (c) 2018 Ulrich-Matthias Schäfer; Licensed MIT */
 
@@ -356,6 +356,8 @@
         },
 
         clean:function(){
+
+            if (!this.set) { return; }
 
             // Remove all circles
             this.set.each(function () {
