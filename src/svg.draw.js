@@ -145,7 +145,6 @@
 
     // Called from outside. Finishs a poly-element
     PaintHandler.prototype.done = function () {
-        this.calc();
         this.stop();
 
         this.el.fire('drawdone');
