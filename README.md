@@ -98,9 +98,9 @@ Each event-object holds the relative position to the parent-Object of the Shape 
 Binding a function to the Event is easy
 
     var draw = SVG('drawing');
-    draw.rect().draw();
+    var rect = draw.rect().draw();
     rect.on('drawstart', function(event){
-        console.log(e.detail); // Holds event, current Point-coords and matrix
+        console.log(event.detail); // Holds event, current Point-coords and matrix
     });
 
 # Plugins
