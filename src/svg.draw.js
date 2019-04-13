@@ -13,7 +13,6 @@
         this.startPoint = null;
         this.lastUpdateCall = null;
         this.options = {};
-        this.set = new SVG.Set();
 
         // Merge options and defaults
         for (var i in this.el.draw.defaults) {
@@ -29,8 +28,8 @@
         }
         
         // Import all methods from plugin into object
-        for (var i in plugin){
-            this[i] = plugin[i];
+        for (var j in plugin){
+            this[j] = plugin[j];
         }
         
         // When we got an event, we use this for start, otherwise we use the click-event as default
@@ -50,7 +49,7 @@
         
         return this.p.matrixTransform(this.m);
     
-    }
+    };
     
     PaintHandler.prototype.start = function (event) {
     
@@ -63,7 +62,7 @@
         this.offset = { x: window.pageXOffset, y: window.pageYOffset };
 
         // we want to snap in screen-coords, so we have to scale the snapToGrid accordingly
-        this.options.snapToGrid *= Math.sqrt(this.m.a * this.m.a + this.m.b * this.m.b)
+        this.options.snapToGrid *= Math.sqrt(this.m.a * this.m.a + this.m.b * this.m.b);
 
         // save the startpoint
         this.startPoint = this.snapToGrid(this.transformPoint(event.clientX, event.clientY));
@@ -88,8 +87,9 @@
     // This function draws a point if the element is a polyline or polygon
     // Otherwise it will just stop drawing the shape cause we are done
     PaintHandler.prototype.point = function (event) {
-        if (this.point != this.start) return this.start(event);
-        
+        if (this.point !== this.start) {
+            return this.start(event);
+        }
         if (this.pointPlugin) {
             return this.pointPlugin(event);
         }

@@ -1,6 +1,6 @@
-/*! svg.draw.js - v2.0.3 - 2018-07-23
+/*! svg.draw.js - v2.0.3 - 2019-04-13
 * https://github.com/svgdotjs/svg.draw.js
-* Copyright (c) 2018 Ulrich-Matthias Schäfer; Licensed MIT */
+* Copyright (c) 2019 Ulrich-Matthias Schäfer; Licensed MIT */
 
 ;(function () {
     // Our Object which manages drawing
@@ -18,7 +18,6 @@
         this.startPoint = null;
         this.lastUpdateCall = null;
         this.options = {};
-        this.set = new SVG.Set();
 
         // Merge options and defaults
         for (var i in this.el.draw.defaults) {
@@ -34,8 +33,8 @@
         }
         
         // Import all methods from plugin into object
-        for (var i in plugin){
-            this[i] = plugin[i];
+        for (var j in plugin){
+            this[j] = plugin[j];
         }
         
         // When we got an event, we use this for start, otherwise we use the click-event as default
@@ -55,7 +54,7 @@
         
         return this.p.matrixTransform(this.m);
     
-    }
+    };
     
     PaintHandler.prototype.start = function (event) {
     
@@ -68,7 +67,7 @@
         this.offset = { x: window.pageXOffset, y: window.pageYOffset };
 
         // we want to snap in screen-coords, so we have to scale the snapToGrid accordingly
-        this.options.snapToGrid *= Math.sqrt(this.m.a * this.m.a + this.m.b * this.m.b)
+        this.options.snapToGrid *= Math.sqrt(this.m.a * this.m.a + this.m.b * this.m.b);
 
         // save the startpoint
         this.startPoint = this.snapToGrid(this.transformPoint(event.clientX, event.clientY));
@@ -93,8 +92,9 @@
     // This function draws a point if the element is a polyline or polygon
     // Otherwise it will just stop drawing the shape cause we are done
     PaintHandler.prototype.point = function (event) {
-        if (this.point != this.start) return this.start(event);
-        
+        if (this.point !== this.start) {
+            return this.start(event);
+        }
         if (this.pointPlugin) {
             return this.pointPlugin(event);
         }
@@ -297,11 +297,11 @@
 
     SVG.Element.prototype.draw.extend('line polyline polygon', {
 
-        init:function(e){
+        init:function(){
             // When we draw a polygon, we immediately need 2 points.
             // One start-point and one point at the mouse-position
 
-            this.set = new SVG.Set();
+            this.set = new SVG.List();
 
             var p = this.startPoint,
                 arr = [
@@ -362,35 +362,33 @@
                 this.remove();
             });
 
-            this.set.clear();
-
             delete this.set;
 
         },
 
         drawCircles:function () {
-            var array = this.el.array().valueOf()
+            var array = this.el.array().valueOf();
 
             this.set.each(function () {
                 this.remove();
             });
 
-            this.set.clear();
+            this.set = new SVG.List();
 
             for (var i = 0; i < array.length; ++i) {
 
-                this.p.x = array[i][0]
-                this.p.y = array[i][1]
+                this.p.x = array[i][0];
+                this.p.y = array[i][1];
 
                 var p = this.p.matrixTransform(this.parent.node.getScreenCTM().inverse().multiply(this.el.node.getScreenCTM()));
 
-                this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
+                this.set.push(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
             }
         },
 
         undo:function() {
-            if (this.set.length()) {
-                this.set.members.splice(-2, 1)[0].remove();
+            if (this.set.length) {
+                this.set.splice(-2, 1)[0].remove();
                 this.el.array().value.splice(-2, 1);
                 this.el.plot(this.el.array());
                 this.el.fire('undopoint');

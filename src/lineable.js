@@ -1,10 +1,10 @@
     SVG.Element.prototype.draw.extend('line polyline polygon', {
 
-        init:function(e){
+        init:function(){
             // When we draw a polygon, we immediately need 2 points.
             // One start-point and one point at the mouse-position
 
-            this.set = new SVG.Set();
+            this.set = new SVG.List();
 
             var p = this.startPoint,
                 arr = [
@@ -65,35 +65,33 @@
                 this.remove();
             });
 
-            this.set.clear();
-
             delete this.set;
 
         },
 
         drawCircles:function () {
-            var array = this.el.array().valueOf()
+            var array = this.el.array().valueOf();
 
             this.set.each(function () {
                 this.remove();
             });
 
-            this.set.clear();
+            this.set = new SVG.List();
 
             for (var i = 0; i < array.length; ++i) {
 
-                this.p.x = array[i][0]
-                this.p.y = array[i][1]
+                this.p.x = array[i][0];
+                this.p.y = array[i][1];
 
                 var p = this.p.matrixTransform(this.parent.node.getScreenCTM().inverse().multiply(this.el.node.getScreenCTM()));
 
-                this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
+                this.set.push(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
             }
         },
 
         undo:function() {
-            if (this.set.length()) {
-                this.set.members.splice(-2, 1)[0].remove();
+            if (this.set.length) {
+                this.set.splice(-2, 1)[0].remove();
                 this.el.array().value.splice(-2, 1);
                 this.el.plot(this.el.array());
                 this.el.fire('undopoint');
