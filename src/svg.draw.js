@@ -1,4 +1,7 @@
-import { Element, Nested, Doc, extend, on, off, Event } from '@svgdotjs/svg.js'
+import { Element, Nested, Doc, extend, on, off } from '@svgdotjs/svg.js'
+
+const defaults = { snapToGrid: 1 }
+let drawPlugins = {}
 
 // Our Object which manages drawing
 class PaintHandler {
@@ -25,8 +28,8 @@ class PaintHandler {
     this.options = {}
 
     // Merge options and defaults
-    for (var i in this.el.draw.defaults) {
-      this.options[i] = this.el.draw.defaults[i]
+    for (var i in defaults) {
+      this.options[i] = defaults[i]
       if (typeof options[i] !== 'undefined') {
         this.options[i] = options[i]
       }
@@ -183,13 +186,30 @@ class PaintHandler {
   }
 
   param (key, value) {
-    this.options[key] = value === null ? this.el.draw.defaults[key] : value
+    this.options[key] = value === null ? defaults[key] : value
     this.update()
   }
 
   // Returns the plugin
   getPlugin () {
-    return this.el.draw.plugins[this.el.type]
+    return drawPlugins[this.el.type]
+  }
+}
+
+export function registerPlugin (name, obj) {
+  var plugins = {}
+  if (typeof name === 'string') {
+    plugins[name] = obj
+  } else {
+    plugins = name
+  }
+
+  for (var shapes in plugins) {
+    var shapesArr = shapes.trim().split(/\s+/)
+
+    for (var i in shapesArr) {
+      drawPlugins[shapesArr[i]] = plugins[shapes]
+    }
   }
 }
 
@@ -198,7 +218,7 @@ extend(Element, {
   draw (event, options, value) {
 
     // sort the parameters
-    if (!(event instanceof Event || typeof event === 'string')) {
+    if (!(event instanceof window.Event || typeof event === 'string')) {
       options = event
       event = null
     }
@@ -207,7 +227,7 @@ extend(Element, {
     var paintHandler = this.remember('_paintHandler') || new PaintHandler(this, event, options || {})
 
     // When we got an event we have to start/continue drawing
-    if (event instanceof Event) {
+    if (event instanceof window.Event) {
       paintHandler['start'](event)
     }
 
@@ -219,25 +239,4 @@ extend(Element, {
     return this
   }
 
-})
-
-extend(Element.prototype.draw, {
-  defaults: { snapToGrid: 1 },
-  plugins: {},
-  extend (name, obj) {
-    var plugins = {}
-    if (typeof name === 'string') {
-      plugins[name] = obj
-    } else {
-      plugins = name
-    }
-
-    for (var shapes in plugins) {
-      var shapesArr = shapes.trim().split(/\s+/)
-
-      for (var i in shapesArr) {
-        Element.prototype.draw.plugins[shapesArr[i]] = plugins[shapes]
-      }
-    }
-  }
 })

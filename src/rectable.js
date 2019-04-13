@@ -1,6 +1,6 @@
-import { Element } from '@svgdotjs/svg.js'
+import { registerPlugin } from './svg.draw.js'
 
-Element.prototype.draw.extend('rect image', {
+registerPlugin('rect image', {
 
   init: function (e) {
 

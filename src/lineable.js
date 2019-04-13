@@ -1,6 +1,7 @@
-import { Element, List } from '@svgdotjs/svg.js'
+import { List } from '@svgdotjs/svg.js'
+import { registerPlugin } from './svg.draw.js'
 
-Element.prototype.draw.extend('line polyline polygon', {
+registerPlugin('line polyline polygon', {
 
   init: function () {
     // When we draw a polygon, we immediately need 2 points.

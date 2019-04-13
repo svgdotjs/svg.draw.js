@@ -45,12 +45,13 @@ const classes = [
 
 const config = (node, min) => ({
   external: ['@svgdotjs/svg.js'],
-  input: 'src/svg.draw.js',
+  input: 'src/main.js',
   output: {
     file: node ? './dist/svg.draw.node.js'
       : min ? './dist/svg.draw.min.js'
         : './dist/svg.draw.js',
     format: node ? 'cjs' : 'iife',
+    name: 'SVG.Draw',
     //name: 'SVG.Filter',
     sourcemap: true,
     banner: headerLong,

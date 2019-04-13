@@ -1,6 +1,6 @@
-import { Element } from '@svgdotjs/svg.js'
+import { registerPlugin } from './svg.draw.js'
 
-Element.prototype.draw.extend('ellipse', {
+registerPlugin('ellipse', {
 
   init: function (e) {
     // We start with a circle with radius 1 at the position of the cursor
