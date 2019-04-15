@@ -1,4 +1,4 @@
-import { Element, Nested, Doc, extend, on, off } from '@svgdotjs/svg.js'
+import { Element, extend, on, off, regex } from '@svgdotjs/svg.js'
 
 const defaults = { snapToGrid: 1 }
 let drawPlugins = {}
@@ -20,7 +20,7 @@ class PaintHandler {
 
     var plugin = this.getPlugin()
 
-    this.parent = el.parent(Nested) || el.parent(Doc)
+    this.parent = el.parent()
     this.p = this.parent.node.createSVGPoint() // Helping point for coord transformation
     this.m = null // transformation matrix. We get it when drawing starts
     this.startPoint = null
@@ -205,7 +205,7 @@ export function registerPlugin (name, obj) {
   }
 
   for (var shapes in plugins) {
-    var shapesArr = shapes.trim().split(/\s+/)
+    var shapesArr = shapes.trim().split(regex.delimiter)
 
     for (var i in shapesArr) {
       drawPlugins[shapesArr[i]] = plugins[shapes]
