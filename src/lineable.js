@@ -26,9 +26,9 @@ registerPlugin('line polyline polygon', {
   // The calc-function sets the position of the last point to the mouse-position (with offset ofc)
   calc: function (e) {
     var arr = this.el.array().valueOf()
-    arr.pop()
 
     if (e) {
+      arr.pop()
       var p = this.transformPoint(e.clientX, e.clientY)
       arr.push(this.snapToGrid([p.x, p.y]))
     }
@@ -56,7 +56,7 @@ registerPlugin('line polyline polygon', {
     }
 
     // We are done, if the element is no polyline or polygon
-    this.stop(e)
+    this.done(e)
 
   },
 

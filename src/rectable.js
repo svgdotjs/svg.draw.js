@@ -10,7 +10,9 @@ registerPlugin('rect image', {
   },
 
   calc: function (e) {
-
+    if (!e) {
+      return
+    }
     var rect = {
       x: this.startPoint.x,
       y: this.startPoint.y
@@ -37,6 +39,10 @@ registerPlugin('rect image', {
 
     // draw the element
     this.el.attr(rect)
+  },
+
+  point: function (e) {
+    this.done()
   }
 
 })
