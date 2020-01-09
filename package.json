@@ -12,9 +12,7 @@
   "author": {
     "name": "Ulrich-Matthias Schäfer"
   },
-  "contributors": {
-    "name": "Ulrich-Matthias Schäfer"
-  },
+  "contributors": ["Ulrich-Matthias Schäfer"],
   "homepage": "https://github.com/svgdotjs/svg.draw.js",
   "main": "dist/svg.draw.js",
   "files": [

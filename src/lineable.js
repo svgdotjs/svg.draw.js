@@ -85,7 +85,7 @@
                 this.p.x = array[i][0]
                 this.p.y = array[i][1]
 
-                var p = this.p.matrixTransform(this.parent.node.getScreenCTM().inverse().multiply(this.el.node.getScreenCTM()));
+                var p = this.p.native().matrixTransform(this.parent.node.getScreenCTM().inverse().multiply(this.el.node.getScreenCTM()));
 
                 this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
             }

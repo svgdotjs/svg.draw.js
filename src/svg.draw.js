@@ -3,12 +3,12 @@
 
         this.el = el;
         el.remember('_paintHandler', this);
-    
+
         var _this = this,
             plugin = this.getPlugin();
 
         this.parent = el.parent(SVG.Nested) || el.parent(SVG.Doc);
-        this.p = this.parent.node.createSVGPoint(); // Helping point for coord transformation
+        this.p = new SVG.Point(this.parent.node.createSVGPoint()); // Helping point for coord transformation
         this.m = null;  // transformation matrix. We get it when drawing starts
         this.startPoint = null;
         this.lastUpdateCall = null;
@@ -22,17 +22,17 @@
                 this.options[i] = options[i];
             }
         }
-        
+
         if(plugin.point) {
           plugin['pointPlugin'] = plugin.point;
           delete plugin.point;
         }
-        
+
         // Import all methods from plugin into object
         for (var i in plugin){
             this[i] = plugin[i];
         }
-        
+
         // When we got an event, we use this for start, otherwise we use the click-event as default
         if (!event) {
             this.parent.on('click.draw', function (e) {
@@ -47,15 +47,15 @@
 
         this.p.x = x - (this.offset.x - window.pageXOffset);
         this.p.y = y - (this.offset.y - window.pageYOffset);
-        
-        return this.p.matrixTransform(this.m);
-    
+
+        return this.p.native().matrixTransform(this.m);
+
     }
-    
+
     PaintHandler.prototype.start = function (event) {
-    
+
         var _this = this;
-    
+
         // get the current transform matrix from screen to element (offset corrected)
         this.m = this.el.node.getScreenCTM().inverse();
 
@@ -89,11 +89,11 @@
     // Otherwise it will just stop drawing the shape cause we are done
     PaintHandler.prototype.point = function (event) {
         if (this.point != this.start) return this.start(event);
-        
+
         if (this.pointPlugin) {
             return this.pointPlugin(event);
         }
-    
+
         // If this function is not overwritten we just call stop
         this.stop(event);
     };
@@ -104,7 +104,7 @@
         if (event) {
             this.update(event);
         }
-        
+
         // Plugin may want to clean something
         if(this.clean){ this.clean(); }
 
@@ -129,13 +129,13 @@
         if(!event && this.lastUpdateCall){
             event = this.lastUpdateCall;
         }
-        
+
         this.lastUpdateCall = event;
-        
+
         // Get the current transform matrix
         // it could have been changed since the start or the last update call
         this.m = this.el.node.getScreenCTM().inverse();
-    
+
         // Call the calc-function which calculates the new position and size
         this.calc(event);
 
