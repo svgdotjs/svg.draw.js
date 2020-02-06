@@ -47,7 +47,9 @@ class PaintHandler {
 
     // When we got an event, we use this for start, otherwise we use the click-event as default
     if (!event) {
-      this.parent.on('click.draw', this.start)
+      this.parent.on('click.draw', e => {
+        this.start(e);
+      })
     }
 
   }
