@@ -15,37 +15,42 @@ For a demo see http://svgdotjs.github.io/svg.draw.js/
 
 - Include the script after svg.js into your page
 
-		<script src="svg.js"></script>
-		<script src="svg.draw.js"></script>
+```html
+<script src="svg.js"></script>
+<script src="svg.draw.js"></script>
+```
 
 - Draw your first rectangle using this simple piece of code:
 
-		<div id="myDrawing"></div>
+```js
+<div id="myDrawing"></div>
 
-		var drawing = new SVG('myDrawing').size(500, 500);
-		drawing.rect().draw()	// Here we init a rectangle and start drawing it
+var drawing = new SVG('myDrawing').size(500, 500);
+drawing.rect().draw()	// Here we init a rectangle and start drawing it
+```
 
 # Usage
 
 As default the drawing starts with a click on the svg-Element
 
-
-    var drawing = SVG('drawing');
-    drawing.rect().draw(options);
-
+```js
+var drawing = SVG('drawing');
+drawing.rect().draw(options);
+```
 
 You can use your own mouse-events. Just pass the event-Object to the draw-Function
 
+```js
+var drawing = SVG('myDrawing');
+var rect = drawing.rect();
 
-    var drawing = SVG('myDrawing');
-    var rect = drawing.rect();
-
-    drawing.on('mousedown', function(event){
-        rect.draw(event, options);
-    });
-    drawing.on('mouseup', function(event){
-        rect.draw(event);
-    });
+drawing.on('mousedown', function(event){
+		rect.draw(event, options);
+});
+drawing.on('mouseup', function(event){
+		rect.draw(event);
+});
+```
 
 The addon automatically knows when to start or stop drawing (most shapes start with the first event and stop with the second).
 However when dealing with e.g. a polygon you are able to set new points with every event. To finish the drawing you have to call the `done`-function.
@@ -55,23 +60,25 @@ See the next chapter for that.
 
 `svg.draw.js` populates its methods it uses to draw the shape. This is useful in edgecases but generally not needed. However the method `done` is needed for poly-shapes and `cancel` can be called on every shape to stop drawing and remove the shape.
 
-	// Finishes the poly-shape
-	polygon.draw('done');
+```js
+// Finishes the poly-shape
+polygon.draw('done');
 
-	// Cancels drawing of a shape, removes it
-	polygon.draw('cancel');
+// Cancels drawing of a shape, removes it
+polygon.draw('cancel');
 
-	/* The following are only useful in edge-cases */
+/* The following are only useful in edge-cases */
 
-	// Draws a new point with the help of (mouse-)event
-	polygon.draw('point', event)
+// Draws a new point with the help of (mouse-)event
+polygon.draw('point', event)
 
-	// Draws the point while moving the mouse (basically the animation)
-	polygon.draw('update', evnt)
+// Draws the point while moving the mouse (basically the animation)
+polygon.draw('update', evnt)
 
-	// Stop drawing, cleans up
-	polygon.draw('stop', event)
-	
+// Stop drawing, cleans up
+polygon.draw('stop', event)
+```
+
 # Options
 
 The following options can be used to modify the behavior of the addon:
@@ -93,15 +100,17 @@ The following options can be used to modify the behavior of the addon:
 
 These events are called at the end of the corresponding method.
 
-Each event-object holds the relative position to the parent-Object of the Shape (which is mostly the SVG-doc itself) as Array
+Each event-object holds the relative position to the parent-Object of the Shape (which is mostly the SVG-doc itself) as a [SVG.Point](https://svgjs.com/docs/2.7/classes/#svg-point) and [SVG.Matrix](https://svgjs.com/docs/2.7/classes/#svg-matrix).
 
 Binding a function to the Event is easy
 
-    var draw = SVG('drawing');
-    var rect = draw.rect().draw();
-    rect.on('drawstart', function(event){
-        console.log(event.detail); // Holds event, current Point-coords and matrix
-    });
+```js
+var draw = SVG('drawing');
+var rect = draw.rect().draw();
+rect.on('drawstart', function(event){
+		console.log(event.detail); // Holds event, current Point-coords and matrix
+});
+```
 
 # Plugins
 
@@ -110,9 +119,29 @@ Any other type you want to draw and is available through `SVG.invent` (e.g. imag
 
 For example:
 
+```js
+	SVG.Element.prototype.draw.extend('line polyline polygon', {
 
-    SVG.Element.prototype.draw.extend('line polyline polygon', {
+	// add methods here which should be added to the draw-object
+	// e.g.
+	foo: function(){
+		// can access this
+	}
 
+	// or even variables
+	bar:5
+
+}
+```
+
+Method `calc` is always needed which updates the point of the shape.
+
+You also can extend two shape-types at once:
+
+```js
+	SVG.Element.prototype.draw.extend({
+
+	'line polyline polygon': {
 		// add methods here which should be added to the draw-object
 		// e.g.
 		foo: function(){
@@ -121,31 +150,14 @@ For example:
 
 		// or even variables
 		bar:5
-
 	}
 
-Method `calc` is always needed which updates the point of the shape.
 
-You also can extend two shape-types at once:
-
-    SVG.Element.prototype.draw.extend({
-
-		'line polyline polygon': {
-			// add methods here which should be added to the draw-object
-			// e.g.
-			foo: function(){
-				// can access this
-			}
-
-			// or even variables
-			bar:5
-		}
-
-
-		'circle':{
-			// something
-		}
+	'circle':{
+		// something
 	}
+}
+```
 
 See the implementation of all shapes as examples.
 
