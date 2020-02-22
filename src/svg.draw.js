@@ -44,8 +44,8 @@
 
     PaintHandler.prototype.transformPoint = function(x, y){
 
-        this.p.x = x - (this.offset.x - window.pageXOffset)
-        this.p.y = y - (this.offset.y - window.pageYOffset)
+        this.p.x = x - window.pageXOffset
+        this.p.y = y - window.pageYOffset
 
         return this.p.transform(this.m)
 
@@ -57,14 +57,11 @@
         // get the current transform matrix from screen to element (offset corrected)
         this.m = this.el.screenCTM().inverse()
 
-        // we save the current scrolling-offset here
-        this.offset = { x: window.pageXOffset, y: window.pageYOffset }
-
         // we want to snap in screen-coords, so we have to scale the snapToGrid accordingly
         this.options.snapToGrid *= Math.sqrt(this.m.a * this.m.a + this.m.b * this.m.b)
 
         // save the startpoint
-        this.startPoint = this.snapToGrid(this.transformPoint(event.clientX, event.clientY))
+        this.startPoint = this.snapToGrid(this.transformPoint(event.pageX, event.pageY))
 
         // the plugin may do some initial work
         if(this.init){ this.init(event) }

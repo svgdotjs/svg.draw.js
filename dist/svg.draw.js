@@ -49,8 +49,8 @@
 
     PaintHandler.prototype.transformPoint = function(x, y){
 
-        this.p.x = x - (this.offset.x - window.pageXOffset)
-        this.p.y = y - (this.offset.y - window.pageYOffset)
+        this.p.x = x - window.pageXOffset
+        this.p.y = y - window.pageYOffset
 
         return this.p.transform(this.m)
 
@@ -62,14 +62,11 @@
         // get the current transform matrix from screen to element (offset corrected)
         this.m = this.el.screenCTM().inverse()
 
-        // we save the current scrolling-offset here
-        this.offset = { x: window.pageXOffset, y: window.pageYOffset }
-
         // we want to snap in screen-coords, so we have to scale the snapToGrid accordingly
         this.options.snapToGrid *= Math.sqrt(this.m.a * this.m.a + this.m.b * this.m.b)
 
         // save the startpoint
-        this.startPoint = this.snapToGrid(this.transformPoint(event.clientX, event.clientY))
+        this.startPoint = this.snapToGrid(this.transformPoint(event.pageX, event.pageY))
 
         // the plugin may do some initial work
         if(this.init){ this.init(event) }
@@ -265,7 +262,7 @@
             var rect = {
                 x: this.startPoint.x,
                 y: this.startPoint.y
-            },  p = this.transformPoint(e.clientX, e.clientY);
+            },  p = this.transformPoint(e.pageX, e.pageY);
 
             rect.width = p.x - rect.x;
             rect.height = p.y - rect.y;
@@ -322,7 +319,7 @@
             arr.pop();
 
             if (e) {
-                var p = this.transformPoint(e.clientX, e.clientY);
+                var p = this.transformPoint(e.pageX, e.pageY);
                 arr.push(this.snapToGrid([p.x, p.y]));
             }
 
@@ -334,7 +331,7 @@
 
             if (this.el.type.indexOf('poly') > -1) {
                 // Add the new Point to the point-array
-                var p = this.transformPoint(e.clientX, e.clientY),
+                var p = this.transformPoint(e.pageX, e.pageY),
                     arr = this.el.array().valueOf();
 
                 arr.push(this.snapToGrid([p.x, p.y]));
@@ -398,9 +395,9 @@
 
 
     SVG.Element.prototype.draw.extend('circle', {
-    
+
         init:function(e){
-        
+
             var p = this.startPoint;
 
             this.el.attr({ cx: p.x, cy: p.y, r: 1 });
@@ -408,8 +405,8 @@
 
         // We determine the radius by the cursor position
         calc:function (e) {
-            
-            var p = this.transformPoint(e.clientX, e.clientY),
+
+            var p = this.transformPoint(e.pageX, e.pageY),
                 circle = {
                     cx: this.startPoint.x,
                     cy: this.startPoint.y,
@@ -420,36 +417,36 @@
                         (p.y - this.startPoint.y) * (p.y - this.startPoint.y)
                     )
             };
-            
+
             this.snapToGrid(circle);
             this.el.attr(circle);
         }
-        
+
     });
 
     SVG.Element.prototype.draw.extend('ellipse', {
-    
+
         init:function(e){
             // We start with a circle with radius 1 at the position of the cursor
             var p = this.startPoint;
 
             this.el.attr({ cx: p.x, cy: p.y, rx: 1, ry: 1 });
-            
+
         },
 
         calc:function (e) {
-            var p = this.transformPoint(e.clientX, e.clientY);
-        
+            var p = this.transformPoint(e.pageX, e.pageY);
+
             var ellipse = {
                 cx: this.startPoint.x,
                 cy: this.startPoint.y,
                 rx: Math.abs(p.x - this.startPoint.x),
                 ry: Math.abs(p.y - this.startPoint.y)
             };
-            
+
             this.snapToGrid(ellipse);
             this.el.attr(ellipse);
         }
-        
+
     });
 }).call(this);

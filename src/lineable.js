@@ -27,7 +27,7 @@
             arr.pop();
 
             if (e) {
-                var p = this.transformPoint(e.clientX, e.clientY);
+                var p = this.transformPoint(e.pageX, e.pageY);
                 arr.push(this.snapToGrid([p.x, p.y]));
             }
 
@@ -39,7 +39,7 @@
 
             if (this.el.type.indexOf('poly') > -1) {
                 // Add the new Point to the point-array
-                var p = this.transformPoint(e.clientX, e.clientY),
+                var p = this.transformPoint(e.pageX, e.pageY),
                     arr = this.el.array().valueOf();
 
                 arr.push(this.snapToGrid([p.x, p.y]));
