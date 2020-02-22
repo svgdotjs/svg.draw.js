@@ -12,7 +12,7 @@
             var rect = {
                 x: this.startPoint.x,
                 y: this.startPoint.y
-            },  p = this.transformPoint(e.pageX, e.pageY);
+            },  p = this.transformPoint(e.clientX, e.clientY);
 
             rect.width = p.x - rect.x;
             rect.height = p.y - rect.y;

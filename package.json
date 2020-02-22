@@ -41,6 +41,6 @@
     "grunt-contrib-watch": "^1.1.0"
   },
   "dependencies": {
-    "svg.js": "^2.3.7"
+    "svg.js": "^2.7.1"
   }
 }

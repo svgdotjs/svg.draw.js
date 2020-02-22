@@ -9,7 +9,7 @@
         },
 
         calc:function (e) {
-            var p = this.transformPoint(e.pageX, e.pageY);
+            var p = this.transformPoint(e.clientX, e.clientY);
 
             var ellipse = {
                 cx: this.startPoint.x,

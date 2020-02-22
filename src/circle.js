@@ -10,7 +10,7 @@
         // We determine the radius by the cursor position
         calc:function (e) {
 
-            var p = this.transformPoint(e.pageX, e.pageY),
+            var p = this.transformPoint(e.clientX, e.clientY),
                 circle = {
                     cx: this.startPoint.x,
                     cy: this.startPoint.y,
