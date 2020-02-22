@@ -12,7 +12,9 @@
   "author": {
     "name": "Ulrich-Matthias Schäfer"
   },
-  "contributors": ["Ulrich-Matthias Schäfer"],
+  "contributors": [
+    "Ulrich-Matthias Schäfer"
+  ],
   "homepage": "https://github.com/svgdotjs/svg.draw.js",
   "main": "dist/svg.draw.js",
   "files": [
@@ -35,6 +37,6 @@
     "grunt-contrib-watch": "~0.6.0"
   },
   "dependencies": {
-    "svg.js": ">2.0"
+    "svg.js": "^2.3.7"
   }
 }
