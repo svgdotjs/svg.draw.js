@@ -9,9 +9,9 @@
 
         this.parent = el.parent(SVG.Nested) || el.parent(SVG.Doc);
         this.p = new SVG.Point(this.parent.node.createSVGPoint()); // Helping point for coord transformation
-        this.m = null;  // transformation matrix. We get it when drawing starts
-        this.startPoint = null;
-        this.lastUpdateCall = null;
+        this.m;  // transformation matrix. We get it when drawing starts
+        this.startPoint;
+        this.lastUpdateCall;
         this.options = {};
         this.set = new SVG.Set();
 
