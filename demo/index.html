@@ -1,207 +1,261 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Svg.draw.js : Demo-Page">
+	<head>
+		<meta charset='utf-8'>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta name="description" content="Svg.draw.js : Demo-Page">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="demo.css">
-    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+		<link rel="stylesheet" type="text/css" media="screen" href="demo.css">
+		<link rel="shortcut icon" href="favicon.png" type="image/png" />
 
-    <title>Svg.draw.js | Demo-Page</title>
+		<title>Svg.draw.js | Demo-Page</title>
 
-  </head>
+	</head>
 
-  <body>
-  <div id="container">
-    <h1>svg.draw.js - Demo</h1>
+	<body>
+	<div id="container">
+		<h1>svg.draw.js - Demo</h1>
 
-    <div class="box">
-      <h2>Rectangle, click to draw</h2>
-      <code>
-        new SVG('rect').size('100%', '100%')
-            .rect().draw();
-      </code>
-      <div id="rect"></div>
-    </div>
+		<div class="box">
+			<h2>Rectangle, click to draw</h2>
+			<code>
+				new SVG('rect').size('100%', '100%')
+						.rect().draw();
+			</code>
+			<div id="rect"></div>
+		</div>
 
-    <div class="box">
-      <h2>Transformed Rectangle, click to draw</h2>
-      <code>
-        new SVG('rect_transformed').size('100%', '100%')
-            .rect().draw().scale(4).rotation(45);
-      </code>
-      <div id="rect_transformed"></div>
-    </div>
+		<div class="box">
+			<h2>Transformed Rectangle, click to draw</h2>
+			<code>
+				new SVG('rect_transformed').size('100%', '100%')
+						.rect().draw().scale(4).rotation(45);
+			</code>
+			<div id="rect_transformed"></div>
+		</div>
 
-    <div class="box">
-      <h2>Polygon, press Enter to finish the shape</h2>
-      <code>
-        var poly1 = new SVG('polygon').size('100%', '100%')
-            .polygon().draw();
+		<div class="box">
+			<h2>Polygon, press Enter to finish the shape</h2>
+			<code>
+				var poly1 = new SVG('polygon').size('100%', '100%')
+						.polygon().draw();
 
-        poly1.on('drawstart', function(e){
-            document.addEventListener('keydown', function(e){
-                if(e.keyCode == 13){
-                    poly1.draw('done');
-                    poly1.off('drawstart');
-                }
-            });
-        });
+				poly1.on('drawstart', function(e){
+						document.addEventListener('keydown', function(e){
+								if(e.keyCode == 13){
+										poly1.draw('done');
+										poly1.off('drawstart');
+								}
+						});
+				});
 
-        poly1.on('drawstop', function(){
-            // remove listener
-        });
-      </code>
-      <div id="polygon"></div>
-    </div>
-    <div class="box">
-      <h2>Ellipse, click to draw</h2>
-      <code>
-        new SVG('ellipse').size('100%', '100%')
-            .ellipse().draw();
-      </code>
-      <div id="ellipse"></div>
-    </div>
-    <div class="box">
-      <h2>Circle, click to draw</h2>
-      <code>
-        new SVG('circle').size('100%', '100%')
-            .circle().draw();
-      </code>
-      <div id="circle"></div>
-    </div>
-    <div class="box">
-      <h2>Polygon, aligned to grid</h2>
-      <code>
-        var poly2 = new SVG('polygonGrid').size('100%', '100%')
-            .polygon().draw({snapToGrid:20});
+				poly1.on('drawstop', function(){
+						// remove listener
+				});
+			</code>
+			<div id="polygon"></div>
+		</div>
+		<div class="box">
+			<h2>Ellipse, click to draw</h2>
+			<code>
+				new SVG('ellipse').size('100%', '100%')
+						.ellipse().draw();
+			</code>
+			<div id="ellipse"></div>
+		</div>
+		<div class="box">
+			<h2>Circle, click to draw</h2>
+			<code>
+				new SVG('circle').size('100%', '100%')
+						.circle().draw();
+			</code>
+			<div id="circle"></div>
+		</div>
+		<div class="box">
+			<h2>Polygon, aligned to grid</h2>
+			<code>
+				var poly2 = new SVG('polygonGrid').size('100%', '100%')
+						.polygon().draw({snapToGrid:20});
 
-        poly2.on('drawstart', function(e){
-            document.addEventListener('keydown', function(e){
-                if(e.keyCode == 13){
-                    poly2.draw('done');
-                    poly2.off('drawstart');
-                }
-            });
-        });
+				poly2.on('drawstart', function(e){
+						document.addEventListener('keydown', function(e){
+								if(e.keyCode == 13){
+										poly2.draw('done');
+										poly2.off('drawstart');
+								}
+						});
+				});
 
-        poly2.on('drawstop', function(){
-            // remove listener
-        });
-      </code>
-      <div id="polygonGrid"></div>
-    </div>
+				poly2.on('drawstop', function(){
+						// remove listener
+				});
+			</code>
+			<div id="polygonGrid"></div>
+		</div>
 
-    <div class="box">
-      <h2>Polygon, aligned to grid with ctrl pressed</h2>
-      <code>
-        var poly3 = new SVG('polygonGridOnCtrl').size('100%', '100%')
-            .polygon().draw({snapToGrid:20});
+		<div class="box">
+			<h2>Polygon, aligned to grid with ctrl pressed</h2>
+			<code>
+				var poly3 = new SVG('polygonGridOnCtrl').size('100%', '100%')
+						.polygon().draw({snapToGrid:20});
 
-        poly3.on('drawstart', function(e){
-            document.addEventListener('keydown', function(e){
-                if(e.keyCode == 13){
-                    poly3.draw('done');
-                    poly3.off('drawstart');
-                }
-                if(e.keyCode == 17){
-                    poly3.draw('param', 'snapToGrid', 20);
-                }
-            });
+				poly3.on('drawstart', function(e){
+						document.addEventListener('keydown', function(e){
+								if(e.keyCode == 13){
+										poly3.draw('done');
+										poly3.off('drawstart');
+								}
+								if(e.keyCode == 17){
+										poly3.draw('param', 'snapToGrid', 20);
+								}
+						});
 
-            document.addEventListener('keyup', function(e){
-                poly3.draw('param', 'snapToGrid', 1);
-            });
-        });
+						document.addEventListener('keyup', function(e){
+								poly3.draw('param', 'snapToGrid', 1);
+						});
+				});
 
-        poly3.on('drawstop', function(){
-            // remove listener
-        });
-      </code>
-      <div id="polygonGridOnCtrl"></div>
-    </div>
+				poly3.on('drawstop', function(){
+						// remove listener
+				});
+			</code>
+			<div id="polygonGridOnCtrl"></div>
+		</div>
 
-    <div class="box">
-      <h2>Rectangle, mousedown/move/up to draw</h2>
-      <code>
-        var drawing = new SVG('rectNoClick').size('100%', '100%');
-        var rect = drawing.rect();
+		<div class="box">
+			<h2>Rectangle, mousedown/move/up to draw</h2>
+			<code>
+				var drawing = new SVG('rectNoClick').size('100%', '100%');
+				var rect = drawing.rect();
 
-        drawing.on('mousedown', function(e){
-            rect.draw(e);
-        }, false);
+				drawing.on('mousedown', function(e){
+						rect.draw(e);
+				}, false);
 
-        drawing.on('mouseup', function(e){
-            rect.draw('stop', e);
-        }, false);
+				drawing.on('mouseup', function(e){
+						rect.draw('stop', e);
+				}, false);
 
-        rect.on('drawstop', function(){
-            // remove listener
-        });
-      </code>
-      <div id="rectNoClick"></div>
-    </div>
+				rect.on('drawstop', function(){
+						// remove listener
+				});
+			</code>
+			<div id="rectNoClick"></div>
+		</div>
 
-  </div>
+		<div class="box">
+			<h2>Polyline, snap to 45 degrees</h2>
+			<code>
+				var drawing = new SVG('rectNoClick').size('100%', '100%');
+				var rect = drawing.rect();
 
-    <script src="svg.min.js"></script>
-    <script src="../dist/svg.draw.js"></script>
-    <script>
-        new SVG('rect').size('100%', '100%').rect().draw().attr('stroke-width',1).attr('fill','none');
-        new SVG('rect_transformed').size('100%', '100%').rect().draw().attr('stroke-width',1).attr('fill','none').scale(4).rotate(45);
-        var poly1 = new SVG('polygon').size('100%', '100%').polygon().draw().attr('stroke-width',1).attr('fill','none');
-        new SVG('ellipse').size('100%', '100%').ellipse().draw().attr('stroke-width',1).attr('fill','none');
-        new SVG('circle').size('100%', '100%').circle().draw().attr('stroke-width',1).attr('fill','none');
-        var poly2 = new SVG('polygonGrid').size('100%', '100%').polygon().draw({snapToGrid:20}).attr('stroke-width',1).attr('fill','none');
+				drawing.on('mousedown', function(e){
+						rect.draw(e);
+				}, false);
 
-        var poly3 = new SVG('polygonGridOnCtrl').size('100%', '100%').polygon().draw().attr('stroke-width',1).attr('fill','none');
+				drawing.on('mouseup', function(e){
+						rect.draw('stop', e);
+				}, false);
 
-        poly3.on('drawstart', function(e){
-            document.addEventListener('keydown', function(e){
-                if(e.keyCode == 13){
-                    poly3.draw('done');
-                    poly3.off('drawstart');
-                }
-                if(e.keyCode == 17){
-                    poly3.draw('param', 'snapToGrid', 20);
-                }
-            });
+				rect.on('drawstop', function(){
+						// remove listener
+				});
+			</code>
+			<div id="degree45"></div>
+		</div>
 
-            document.addEventListener('keyup', function(e){
-                poly3.draw('param', 'snapToGrid', 1);
-            });
-        });
+	</div>
 
-        var drawing = new SVG('rectNoClick').size('100%', '100%');
-        var rect = drawing.rect().attr('stroke-width',1).attr('fill','none');
-        drawing.on('mousedown', function(e){
-            rect.draw(e);
-        }, false);
+		<script src="svg.min.js"></script>
+		<script src="../dist/svg.draw.js"></script>
+		<script>
+			function rect () {
+				new SVG('rect').size('100%', '100%').rect().draw().attr('stroke-width',1).attr('fill','none');
+			}
 
-        drawing.on('mouseup', function(e){
-            rect.draw('stop', e);
-        }, false);
+			function rect_transformed () {
+				new SVG('rect_transformed').size('100%', '100%').rect().draw().attr('stroke-width',1).attr('fill','none').scale(4).rotate(45);
+			}
 
-        poly1.on('drawstart', function(e){
-            document.addEventListener('keydown', function(e){
-                if(e.keyCode == 13){
-                    poly1.draw('done');
-                    poly1.off('drawstart');
-                }
-            });
-        });
+			function polygon () {
+				var poly1 = new SVG('polygon').size('100%', '100%').polygon().draw().attr('stroke-width',1).attr('fill','none');
 
-        poly2.on('drawstart', function(e){
-            document.addEventListener('keydown', function(e){
-                if(e.keyCode == 13){
-                    poly2.draw('done');
-                    poly2.off('drawstart');
-                }
-            });
-        });
+				poly1.on('drawstart', function(e){
+					document.addEventListener('keydown', function(e){
+							if(e.keyCode == 13){
+								poly1.draw('done');
+								poly1.off('drawstart');
+							}
+					});
+				});
+			}
 
-    </script>
-  </body>
+			function ellipse () {
+				new SVG('ellipse').size('100%', '100%').ellipse().draw().attr('stroke-width',1).attr('fill','none');
+			}
+
+			function circle () {
+				new SVG('circle').size('100%', '100%').circle().draw().attr('stroke-width',1).attr('fill','none');
+			}
+
+			function polygonGrid () {
+				var poly2 = new SVG('polygonGrid').size('100%', '100%').polygon().draw({snapToGrid:20}).attr('stroke-width',1).attr('fill','none');
+
+				poly2.on('drawstart', function(e){
+					document.addEventListener('keydown', function(e){
+						if(e.keyCode == 13){
+							poly2.draw('done');
+							poly2.off('drawstart');
+						}
+					});
+				});
+			}
+
+			function polygonGridOnCtrl () {
+				var poly3 = new SVG('polygonGridOnCtrl').size('100%', '100%').polygon().draw().attr('stroke-width',1).attr('fill','none');
+
+				poly3.on('drawstart', function(e){
+					document.addEventListener('keydown', function(e){
+						if(e.keyCode == 13){
+							poly3.draw('done');
+							poly3.off('drawstart');
+						}
+						if(e.keyCode == 17){
+							poly3.draw('param', 'snapToGrid', 20);
+						}
+					});
+
+					document.addEventListener('keyup', function(e){
+						poly3.draw('param', 'snapToGrid', 1);
+					});
+				});
+			}
+
+			function rectNoClick () {
+				var drawing = new SVG('rectNoClick').size('100%', '100%');
+				var rect = drawing.rect().attr('stroke-width',1).attr('fill','none');
+
+				drawing.on('mousedown', function(e){
+					rect.draw(e);
+				}, false);
+
+				drawing.on('mouseup', function(e){
+					rect.draw('stop', e);
+				}, false);
+			}
+
+			function degree45 () {
+				var poly4 = new SVG('degree45').size('100%', '100%').polyline().fill('none').stroke({width:2})
+				var updatePoly4 = true
+				var point
+
+				poly4.on('dblclick', function (event) {
+
+				})
+
+			}
+
+		</script>
+	</body>
 </html>
