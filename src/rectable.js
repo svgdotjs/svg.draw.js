@@ -1,12 +1,12 @@
     SVG.Element.prototype.draw.extend('rect image', {
-    
+
         init:function(e){
 
             var p = this.startPoint;
-            
+
             this.el.attr({ x: p.x, y: p.y, height: 0, width: 0 });
         },
-        
+
         calc:function (e) {
 
             var rect = {
@@ -36,5 +36,5 @@
             // draw the element
             this.el.attr(rect);
         }
-    
+
     });

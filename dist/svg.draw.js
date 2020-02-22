@@ -43,7 +43,6 @@
             this.parent.on('click.draw', function (e) {
                 _this.start(e)
             })
-
         }
 
     }
@@ -53,16 +52,15 @@
         this.p.x = x - (this.offset.x - window.pageXOffset)
         this.p.y = y - (this.offset.y - window.pageYOffset)
 
-        return this.p.native().matrixTransform(this.m)
+        return this.p.transform(this.m)
 
     }
 
     PaintHandler.prototype.start = function (event) {
 
         var _this = this
-debugger
         // get the current transform matrix from screen to element (offset corrected)
-        this.m = /* new SVG.Matrix */ this.el.node.getScreenCTM().inverse()
+        this.m = this.el.screenCTM().inverse()
 
         // we save the current scrolling-offset here
         this.offset = { x: window.pageXOffset, y: window.pageYOffset }
@@ -139,7 +137,7 @@ debugger
 
         // Get the current transform matrix
         // it could have been changed since the start or the last update call
-        this.m = this.el.node.getScreenCTM().inverse()
+        this.m = this.el.screenCTM().inverse()
 
         // Call the calc-function which calculates the new position and size
         this.calc(event)
@@ -254,14 +252,14 @@ debugger
 
 
     SVG.Element.prototype.draw.extend('rect image', {
-    
+
         init:function(e){
 
             var p = this.startPoint;
-            
+
             this.el.attr({ x: p.x, y: p.y, height: 0, width: 0 });
         },
-        
+
         calc:function (e) {
 
             var rect = {
@@ -291,7 +289,7 @@ debugger
             // draw the element
             this.el.attr(rect);
         }
-    
+
     });
 
 
@@ -382,7 +380,7 @@ debugger
                 this.p.x = array[i][0]
                 this.p.y = array[i][1]
 
-                var p = this.p.native().matrixTransform(this.parent.node.getScreenCTM().inverse().multiply(this.el.node.getScreenCTM()));
+                var p = this.p.transform(this.parent.screenCTM().inverse().multiply(this.el.screenCTM()));
 
                 this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
             }
