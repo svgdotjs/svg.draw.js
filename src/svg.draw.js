@@ -55,9 +55,9 @@
     PaintHandler.prototype.start = function (event) {
 
         var _this = this
-
+debugger
         // get the current transform matrix from screen to element (offset corrected)
-        this.m = this.el.node.getScreenCTM().inverse()
+        this.m = /* new SVG.Matrix */ this.el.node.getScreenCTM().inverse()
 
         // we save the current scrolling-offset here
         this.offset = { x: window.pageXOffset, y: window.pageYOffset }

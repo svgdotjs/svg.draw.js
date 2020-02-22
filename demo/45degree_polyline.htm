@@ -1,0 +1,72 @@
+<head>
+<style>
+* {
+  box-sizing: border-box;
+}
+html, body, svg {
+  margin: 0;
+  padding: 0;
+}
+#canvas {
+  height: 100vh;
+  overflow-y: hidden;
+}
+</style>
+</head>
+
+<div id="canvas"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.min.js" integrity="sha256-DSAVgUuz6YXM7pUOvn+Lc40Ek6cWvBgCBU1jsx72Dqg=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/svg.draw.js@2.0.4/dist/svg.draw.min.js"></script>
+
+<script>
+const poly3 = SVG('canvas')
+const line = poly3.polyline().fill('none').stroke({width: 2})
+
+let update = true
+
+const point = { x:0, y:0 }
+poly3.on('dblclick', event => {
+  const { clientX, clientY } = event
+  point.x = clientX
+  point.y = clientY
+
+  line.draw('start', event)
+})
+
+poly3.on('mousemove', event  => {
+  // console.log('mousemove')
+
+  update = true
+})
+
+line.on('drawupdate', event => {
+  // console.log('drawupdate')
+
+  if (update) {
+    update = false
+    const snappedPoint = snapTo45(point, event.detail.p)
+    // console.log(event.detail.p, snappedPoint)
+    line.draw('update', snappedPoint)
+  }
+})
+
+function snapTo45 (startPoint, currentPoint) {
+  // solution from https://stackoverflow.com/a/42510911/205696
+  const deltaX = currentPoint.x - startPoint.x,
+        deltaY = currentPoint.y - startPoint.y,
+        dist = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2))
+
+  const angle = Math.atan2(deltaY, deltaX)
+  const snappedAngle = Math.round(angle / Math.PI * 4) / 4 * Math.PI
+
+  // console.log(deltaX, deltaY, dist, angle, snappedAngle)
+  // console.log(startPoint, currentPoint)
+  // console.log(dist)
+
+  return {
+    clientX: startPoint.x + dist * Math.cos(snappedAngle),
+    clientY: startPoint.y + dist * Math.sin(snappedAngle)
+  }
+}
+</script>
