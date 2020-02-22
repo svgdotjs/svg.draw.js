@@ -73,7 +73,7 @@ polygon.draw('cancel');
 polygon.draw('point', event)
 
 // Draws the point while moving the mouse (basically the animation)
-polygon.draw('update', evnt)
+polygon.draw('update', event)
 
 // Stop drawing, cleans up
 polygon.draw('stop', event)

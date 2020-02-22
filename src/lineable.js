@@ -48,7 +48,7 @@
                 this.drawCircles();
 
                 // Fire the `drawpoint`-event, which holds the coords of the new Point
-                this.el.fire('drawpoint', {event:e, p:{x:p.x, y:p.y}, m:this.m});
+                this.el.fire('drawpoint', {event:e, p:p, m:this.m});
 
                 return;
             }
