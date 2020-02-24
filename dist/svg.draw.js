@@ -1,4 +1,4 @@
-/*! svg.draw.js - v2.0.4 - 2020-02-22
+/*! svg.draw.js - v2.0.4 - 2020-02-24
 * https://github.com/svgdotjs/svg.draw.js
 * Copyright (c) 2020 Ulrich-Matthias Schäfer; Licensed MIT */
 

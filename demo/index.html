@@ -264,10 +264,8 @@
         // var offset = {x:0,y:0}
         var point
 
-        console.clear()
-
         canvas.on('dblclick', function (event) {
-          console.log(event.clientX, event.clientY)
+          point = event
           polyline.draw('start', event)
         })
 
@@ -276,7 +274,8 @@
         })
 
         polyline.on('drawstart', function (event) {
-          point = event.detail.p.clone()
+          // point = event.detail.p.clone()
+          // point = event
 
           document.addEventListener('keydown', function (event) {
             if (event.keyCode == 13) {
@@ -287,18 +286,34 @@
           })
         })
 
+        polyline.on('drawpoint', function (event) {
+          // point = event.detail.p.clone()
+          // point = event
+        })
+
         polyline.on('drawupdate', function (event) {
           // we save the current scrolling-offset here
           // offset = { x: window.pageXOffset, y: window.pageYOffset }
 
           if (update) {
             // debugger
-            var snappedPoint = snapTo45(point, event.detail.p)
-            console.log(event.detail.p, snappedPoint)
+            // var snappedPoint = snapTo45(point, event.detail.p)
+            // console.log(point, event.detail.p, snappedPoint)
+            console.clear()
+            console.log("client", {x:event.detail.event.clientX,y:event.detail.event.clientY})
+            // console.log("our point", point)
+            // console.log("svg.draw point", event.detail.p)
+            console.log("svg.draw point", {x:point.clientX,y:point.clientY})
+            // console.log("snapped", snappedPoint)
+            // console.log("fixed", snappedPoint.transform(canvas.screenCTM().inverse()))
+
+            var startPoint = { x: point.clientX, y: point.clientY }
+            var currentPoint = { x: event.detail.event.clientX, y: event.detail.event.clientY }
+            var snappedPoint = snapTo45(startPoint, currentPoint)
 
             update = false
 
-            // polyline.draw('update', event.detail.p)
+            polyline.draw('update', snappedPoint)
           }
         })
 
@@ -310,6 +325,7 @@
 
           var angle = Math.atan2(deltaY, deltaX)
           var snappedAngle = Math.round(angle / Math.PI * 4) / 4 * Math.PI
+          console.log(snappedAngle)
 
           // console.log(deltaX, deltaY, dist, angle, snappedAngle)
           // console.log(startPoint, currentPoint)
@@ -319,6 +335,10 @@
             clientX: startPoint.x + dist * Math.cos(snappedAngle),
             clientY: startPoint.y + dist * Math.sin(snappedAngle)
           }
+          // return new SVG.Point(
+          //   startPoint.x + dist * Math.cos(snappedAngle),
+          //   startPoint.y + dist * Math.sin(snappedAngle)
+          // )
         }
       }
     </script>
