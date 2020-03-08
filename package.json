@@ -3,7 +3,8 @@
   "version": "2.0.4",
   "scripts": {
     "build": "grunt",
-    "build:watch": "grunt watch"
+    "build:watch": "grunt watch",
+    "hint": "grunt eslint"
   },
   "description": "An extension for svg.js which allows to draw elements with mouse",
   "keywords": [
@@ -33,14 +34,14 @@
   },
   "devDependencies": {
     "grunt": "^1.0.4",
-    "grunt-bumper": "^1.0.4",
-    "grunt-contrib-clean": "~1.1.0",
+    "grunt-bumper": "^1.1.0",
+    "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-jshint": "~1.0.0",
-    "grunt-contrib-uglify": "~1.0.2",
-    "grunt-contrib-watch": "^1.1.0"
+    "grunt-contrib-uglify": "^4.0.1",
+    "grunt-contrib-watch": "^1.1.0",
+    "gruntify-eslint": "^5.0.0"
   },
   "dependencies": {
-    "svg.js": "^2.7.1"
+    "svg.js": "^2.3.7"
   }
 }

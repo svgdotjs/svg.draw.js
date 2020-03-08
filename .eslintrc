@@ -1,0 +1,43 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 5,
+    "ecmaFeatures": {
+      "impliedStrict": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "globals": {
+    "SVG": "readonly"
+  },
+  "rules": {
+    "curly": ["error", "multi-line"],
+    "eqeqeq": "error",
+    "indent": ["error", 4],
+    "nonblock-statement-body-position": ["error", "beside"],
+    "wrap-iife": ["error", "any"],
+    "no-unreachable": "error",
+    "no-use-before-define": ["error",
+      {
+        "functions": false
+      }
+    ],
+    "new-cap": "error",
+    "no-caller": "error",
+    "dot-notation": "off",
+    "no-undef": "error",
+    "no-unused-vars": "error",
+    "no-cond-assign": ["error",
+      "except-parens"
+    ],
+    "no-eq-null": "error",
+    "semi": ["error",
+      "never"
+    ],
+    "quotes": ["error",
+      "single"
+    ]
+  }
+}

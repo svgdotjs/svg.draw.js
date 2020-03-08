@@ -36,13 +36,7 @@ module.exports = function(grunt) {
         dest: 'dist/<%= fileName %>.min.js'
       },
     },
-    jshint: {
-      options: {
-        jshintrc: true
-      },
-      gruntfile: {
-        src: 'Gruntfile.js'
-      },
+    eslint: {
       src: {
         src: ['src/**/*.js']
       }
@@ -56,18 +50,18 @@ module.exports = function(grunt) {
     bumper: {
       options: {
         files: ['package.json', 'bower.json'],
-        tagName: "%VERSION%"
+        tagName: '%VERSION%'
       }
     },
   });
-  
+
   grunt.config('fileName', grunt.config('pkg').name.slice(0, -3));
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('gruntify-eslint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-bumper');
 
