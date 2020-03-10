@@ -41,3 +41,13 @@ h1{
     background:url(grid.png) #fff;
     border-radius:10px;
 }
+
+@media (prefers-color-scheme: dark) {
+    body{
+        background-color: #001628;
+    }
+
+    .box div{
+        background-color:#eee;
+    }
+}
