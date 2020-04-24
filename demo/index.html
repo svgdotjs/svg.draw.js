@@ -286,10 +286,10 @@
           })
         })
 
-        polyline.on('drawpoint', function (event) {
-          // point = event.detail.p.clone()
-          // point = event
-        })
+        // polyline.on('drawpoint', function (event) {
+        //   point = event.detail.p.clone()
+        //   point = event
+        // })
 
         polyline.on('drawupdate', function (event) {
           // we save the current scrolling-offset here
@@ -324,6 +324,7 @@
               dist = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2))
 
           var angle = Math.atan2(deltaY, deltaX)
+          // var snappedAngle = (angle / Math.PI * 4) / 4 * Math.PI
           var snappedAngle = Math.round(angle / Math.PI * 4) / 4 * Math.PI
           console.log(snappedAngle)
 
@@ -342,5 +343,6 @@
         }
       }
     </script>
+    <script src="//localhost:35729/livereload.js"></script>
   </body>
 </html>

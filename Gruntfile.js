@@ -42,9 +42,16 @@ module.exports = function(grunt) {
       }
     },
     watch: {
+      eslint: {
+        files: ['src/*.js'],
+        tasks: ['eslint']
+      },
       scripts: {
         files: ['src/*.js'],
-        tasks: ['default']
+        tasks: ['default'],
+        options: {
+          livereload: true
+        }
       },
     },
     bumper: {

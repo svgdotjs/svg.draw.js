@@ -1,11 +1,12 @@
-/*! svg.draw.js - v2.0.4 - 2020-02-24
+/*! svg.draw.js - v2.0.4 - 2020-03-10
 * https://github.com/svgdotjs/svg.draw.js
 * Copyright (c) 2020 Ulrich-Matthias Schäfer; Licensed MIT */
 
 ;(function () {
 'use strict'
+
 // Our Object which manages drawing
-function PaintHandler(el, event, options) {
+function PaintHandler (el, event, options) {
 
     this.el = el
     el.remember('_paintHandler', this)
@@ -36,8 +37,8 @@ function PaintHandler(el, event, options) {
     }
 
     // Import all methods from plugin into object
-    for (var i in plugin) {
-        this[i] = plugin[i]
+    for (var p in plugin) {
+        this[p] = plugin[p]
     }
 
     // When we got an event, we use this for start, otherwise we use the click-event as default
@@ -92,12 +93,14 @@ PaintHandler.prototype.start = function (event) {
 
     // Every consecutive call to start should map to point now
     this.start = this.point
+
 }
 
 // This function draws a point if the element is a polyline or polygon
 // Otherwise it will just stop drawing the shape cause we are done
 PaintHandler.prototype.point = function (event) {
-    if (this.point != this.start) return this.start(event)
+
+    if (this.point !== this.start) return this.start(event)
 
     if (this.pointPlugin) {
         return this.pointPlugin(event)
@@ -105,11 +108,13 @@ PaintHandler.prototype.point = function (event) {
 
     // If this function is not overwritten we just call stop
     this.stop(event)
+
 }
 
 
 // The stop-function does the cleanup work
 PaintHandler.prototype.stop = function (event) {
+
     if (event) {
         this.update(event)
     }
@@ -131,6 +136,7 @@ PaintHandler.prototype.stop = function (event) {
 
     // Fire the `drawstop`-event
     this.el.fire('drawstop')
+
 }
 
 // Updates the element while moving the cursor
@@ -158,23 +164,28 @@ PaintHandler.prototype.update = function (event) {
         p: this.p,
         m: this.m
     })
+
 }
 
 // Called from outside. Finishs a poly-element
 PaintHandler.prototype.done = function () {
+
     this.calc()
     this.stop()
 
     this.el.fire('drawdone')
+
 }
 
 // Called from outside. Cancels a poly-element
 PaintHandler.prototype.cancel = function () {
+
     // stop drawing and remove the element
     this.stop()
     this.el.remove()
 
     this.el.fire('drawcancel')
+
 }
 
 // Calculate the corrected position when using `snapToGrid`
@@ -197,19 +208,25 @@ PaintHandler.prototype.snapToGrid = function (draw) {
     }
 
     return draw
+
 }
 
 PaintHandler.prototype.param = function (key, value) {
+
     this.options[key] = value === null ? this.el.draw.defaults[key] : value
     this.update()
+
 }
 
 // Returns the plugin
 PaintHandler.prototype.getPlugin = function () {
+
     return this.el.draw.plugins[this.el.type]
+
 }
 
 SVG.extend(SVG.Element, {
+
     // Draw element with mouse
     draw: function (event, options, value) {
 
@@ -264,205 +281,208 @@ SVG.Element.prototype.draw.extend = function (name, obj) {
 // Container for all types not specified here
 SVG.Element.prototype.draw.plugins = {}
 
-    SVG.Element.prototype.draw.extend('rect image', {
+SVG.Element.prototype.draw.extend('rect image', {
 
-        init:function(e){
+    init: function () {
 
-            var p = this.startPoint;
+        var p = this.startPoint
 
-            this.el.attr({ x: p.x, y: p.y, height: 0, width: 0 });
-        },
+        this.el.attr({ x: p.x, y: p.y, height: 0, width: 0 })
 
-        calc:function (e) {
+    },
 
-            var rect = {
+    calc: function (e) {
+
+        var p = this.transformPoint(e.clientX, e.clientY),
+            rect = {
                 x: this.startPoint.x,
                 y: this.startPoint.y
-            },  p = this.transformPoint(e.clientX, e.clientY);
-
-            rect.width = p.x - rect.x;
-            rect.height = p.y - rect.y;
-
-            // Snap the params to the grid we specified
-            this.snapToGrid(rect);
-
-            // When width is less than zero, we have to draw to the left
-            // which means we have to move the start-point to the left
-            if (rect.width < 0) {
-                rect.x = rect.x + rect.width;
-                rect.width = -rect.width;
             }
 
-            // ...same with height
-            if (rect.height < 0) {
-                rect.y = rect.y + rect.height;
-                rect.height = -rect.height;
-            }
+        rect.width = p.x - rect.x
+        rect.height = p.y - rect.y
 
-            // draw the element
-            this.el.attr(rect);
+        // Snap the params to the grid we specified
+        this.snapToGrid(rect)
+
+        // When width is less than zero, we have to draw to the left
+        // which means we have to move the start-point to the left
+        if (rect.width < 0) {
+            rect.x = rect.x + rect.width
+            rect.width = -rect.width
         }
 
-    });
+        // ...same with height
+        if (rect.height < 0) {
+            rect.y = rect.y + rect.height
+            rect.height = -rect.height
+        }
+
+        // draw the element
+        this.el.attr(rect)
+
+    }
+
+})
 
 
-    SVG.Element.prototype.draw.extend('line polyline polygon', {
+SVG.Element.prototype.draw.extend('line polyline polygon', {
 
-        init:function(e){
-            // When we draw a polygon, we immediately need 2 points.
-            // One start-point and one point at the mouse-position
+    init: function () {
+        // When we draw a polygon, we immediately need 2 points.
+        // One start-point and one point at the mouse-position
 
-            this.set = new SVG.Set();
+        this.set = new SVG.Set()
 
-            var p = this.startPoint,
-                arr = [
-                    [p.x, p.y],
-                    [p.x, p.y]
-                ];
+        var p = this.startPoint,
+            arr = [
+                [p.x, p.y],
+                [p.x, p.y]
+            ]
 
-            this.el.plot(arr);
+        this.el.plot(arr)
 
-            // We draw little circles around each point
-            // This is absolutely not needed and maybe removed in a later release
-            this.drawCircles();
+        // We draw little circles around each point
+        // This is absolutely not needed and maybe removed in a later release
+        this.drawCircles()
 
-        },
-
-
-        // The calc-function sets the position of the last point to the mouse-position (with offset ofc)
-        calc:function (e) {
-            var arr = this.el.array().valueOf();
-            arr.pop();
-
-            if (e) {
-                var p = this.transformPoint(e.clientX, e.clientY);
-                arr.push(this.snapToGrid([p.x, p.y]));
-            }
-
-            this.el.plot(arr);
-            this.drawCircles();
-        },
-
-        point:function(e){
-
-            if (this.el.type.indexOf('poly') > -1) {
-                // Add the new Point to the point-array
-                var p = this.transformPoint(e.clientX, e.clientY),
-                    arr = this.el.array().valueOf();
-
-                arr.push(this.snapToGrid([p.x, p.y]));
-
-                this.el.plot(arr);
-                this.drawCircles();
-
-                // Fire the `drawpoint`-event, which holds the coords of the new Point
-                this.el.fire('drawpoint', {event:e, p:p, m:this.m});
-
-                return;
-            }
-
-            // We are done, if the element is no polyline or polygon
-            this.stop(e);
-
-        },
-
-        clean:function(){
-
-            // Remove all circles
-            this.set.each(function () {
-                this.remove();
-            });
-
-            this.set.clear();
-
-            delete this.set;
-
-        },
-
-        drawCircles:function () {
-            var array = this.el.array().valueOf()
-
-            this.set.each(function () {
-                this.remove();
-            });
-
-            this.set.clear();
-
-            for (var i = 0; i < array.length; ++i) {
-
-                this.p.x = array[i][0]
-                this.p.y = array[i][1]
-
-                var p = this.p.transform(this.parent.screenCTM().inverse().multiply(this.el.screenCTM()));
-
-                this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y));
-            }
-        },
-
-        undo:function() {
-            if (this.set.length()) {
-                this.set.members.splice(-2, 1)[0].remove();
-                this.el.array().value.splice(-2, 1);
-                this.el.plot(this.el.array());
-                this.el.fire('undopoint');
-            }
-        },
-    });
+    },
 
 
-    SVG.Element.prototype.draw.extend('circle', {
+    // The calc-function sets the position of the last point to the mouse-position (with offset ofc)
+    calc: function (e) {
+        var arr = this.el.array().valueOf()
+        arr.pop()
 
-        init:function(e){
+        if (e) {
+            var p = this.transformPoint(e.clientX, e.clientY)
+            arr.push(this.snapToGrid([p.x, p.y]))
+        }
 
-            var p = this.startPoint;
+        this.el.plot(arr)
+        this.drawCircles()
+    },
 
-            this.el.attr({ cx: p.x, cy: p.y, r: 1 });
-        },
+    point: function (e) {
 
-        // We determine the radius by the cursor position
-        calc:function (e) {
-
+        if (this.el.type.indexOf('poly') > -1) {
+            // Add the new Point to the point-array
             var p = this.transformPoint(e.clientX, e.clientY),
-                circle = {
-                    cx: this.startPoint.x,
-                    cy: this.startPoint.y,
+                arr = this.el.array().valueOf()
 
-                    // calculating the radius
-                    r: Math.sqrt(
-                        (p.x - this.startPoint.x) * (p.x - this.startPoint.x) +
-                        (p.y - this.startPoint.y) * (p.y - this.startPoint.y)
-                    )
-            };
+            arr.push(this.snapToGrid([p.x, p.y]))
 
-            this.snapToGrid(circle);
-            this.el.attr(circle);
+            this.el.plot(arr)
+            this.drawCircles()
+
+            // Fire the `drawpoint`-event, which holds the coords of the new Point
+            this.el.fire('drawpoint', {event:e, p:p, m:this.m})
+
+            return
         }
 
-    });
+        // We are done, if the element is no polyline or polygon
+        this.stop(e)
 
-    SVG.Element.prototype.draw.extend('ellipse', {
+    },
 
-        init:function(e){
-            // We start with a circle with radius 1 at the position of the cursor
-            var p = this.startPoint;
+    clean: function () {
 
-            this.el.attr({ cx: p.x, cy: p.y, rx: 1, ry: 1 });
+        // Remove all circles
+        this.set.each(function () {
+            this.remove()
+        })
 
-        },
+        this.set.clear()
 
-        calc:function (e) {
-            var p = this.transformPoint(e.clientX, e.clientY);
+        delete this.set
 
-            var ellipse = {
+    },
+
+    drawCircles: function () {
+        var array = this.el.array().valueOf()
+
+        this.set.each(function () {
+            this.remove()
+        })
+
+        this.set.clear()
+
+        for (var i = 0; i < array.length; ++i) {
+
+            this.p.x = array[i][0]
+            this.p.y = array[i][1]
+
+            var p = this.p.transform(this.parent.screenCTM().inverse().multiply(this.el.screenCTM()))
+
+            this.set.add(this.parent.circle(5).stroke({width: 1}).fill('#ccc').center(p.x, p.y))
+        }
+    },
+
+    undo: function () {
+        if (this.set.length()) {
+            this.set.members.splice(-2, 1)[0].remove()
+            this.el.array().value.splice(-2, 1)
+            this.el.plot(this.el.array())
+            this.el.fire('undopoint')
+        }
+    },
+})
+
+
+SVG.Element.prototype.draw.extend('circle', {
+
+    init: function () {
+
+        var p = this.startPoint
+
+        this.el.attr({ cx: p.x, cy: p.y, r: 1 })
+
+    },
+
+    // We determine the radius by the cursor position
+    calc: function (e) {
+
+        var p = this.transformPoint(e.clientX, e.clientY),
+            circle = {
                 cx: this.startPoint.x,
                 cy: this.startPoint.y,
-                rx: Math.abs(p.x - this.startPoint.x),
-                ry: Math.abs(p.y - this.startPoint.y)
-            };
 
-            this.snapToGrid(ellipse);
-            this.el.attr(ellipse);
+                // calculating the radius
+                r: Math.sqrt(
+                    (p.x - this.startPoint.x) * (p.x - this.startPoint.x) +
+                    (p.y - this.startPoint.y) * (p.y - this.startPoint.y)
+                )
+            }
+
+        this.snapToGrid(circle)
+        this.el.attr(circle)
+    }
+
+})
+
+SVG.Element.prototype.draw.extend('ellipse', {
+
+    init: function () {
+        // We start with a circle with radius 1 at the position of the cursor
+        var p = this.startPoint
+
+        this.el.attr({ cx: p.x, cy: p.y, rx: 1, ry: 1 })
+    },
+
+    calc: function (e) {
+        var p = this.transformPoint(e.clientX, e.clientY)
+
+        var ellipse = {
+            cx: this.startPoint.x,
+            cy: this.startPoint.y,
+            rx: Math.abs(p.x - this.startPoint.x),
+            ry: Math.abs(p.y - this.startPoint.y)
         }
 
-    });
+        this.snapToGrid(ellipse)
+        this.el.attr(ellipse)
+    }
+
+})
 }).call(this);

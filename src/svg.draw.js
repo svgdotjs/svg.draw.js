@@ -1,6 +1,7 @@
 'use strict'
+
 // Our Object which manages drawing
-function PaintHandler(el, event, options) {
+function PaintHandler (el, event, options) {
 
     this.el = el
     el.remember('_paintHandler', this)
@@ -31,8 +32,8 @@ function PaintHandler(el, event, options) {
     }
 
     // Import all methods from plugin into object
-    for (var i in plugin) {
-        this[i] = plugin[i]
+    for (var p in plugin) {
+        this[p] = plugin[p]
     }
 
     // When we got an event, we use this for start, otherwise we use the click-event as default
@@ -87,12 +88,14 @@ PaintHandler.prototype.start = function (event) {
 
     // Every consecutive call to start should map to point now
     this.start = this.point
+
 }
 
 // This function draws a point if the element is a polyline or polygon
 // Otherwise it will just stop drawing the shape cause we are done
 PaintHandler.prototype.point = function (event) {
-    if (this.point != this.start) return this.start(event)
+
+    if (this.point !== this.start) return this.start(event)
 
     if (this.pointPlugin) {
         return this.pointPlugin(event)
@@ -100,11 +103,13 @@ PaintHandler.prototype.point = function (event) {
 
     // If this function is not overwritten we just call stop
     this.stop(event)
+
 }
 
 
 // The stop-function does the cleanup work
 PaintHandler.prototype.stop = function (event) {
+
     if (event) {
         this.update(event)
     }
@@ -126,6 +131,7 @@ PaintHandler.prototype.stop = function (event) {
 
     // Fire the `drawstop`-event
     this.el.fire('drawstop')
+
 }
 
 // Updates the element while moving the cursor
@@ -153,23 +159,28 @@ PaintHandler.prototype.update = function (event) {
         p: this.p,
         m: this.m
     })
+
 }
 
 // Called from outside. Finishs a poly-element
 PaintHandler.prototype.done = function () {
+
     this.calc()
     this.stop()
 
     this.el.fire('drawdone')
+
 }
 
 // Called from outside. Cancels a poly-element
 PaintHandler.prototype.cancel = function () {
+
     // stop drawing and remove the element
     this.stop()
     this.el.remove()
 
     this.el.fire('drawcancel')
+
 }
 
 // Calculate the corrected position when using `snapToGrid`
@@ -192,19 +203,25 @@ PaintHandler.prototype.snapToGrid = function (draw) {
     }
 
     return draw
+
 }
 
 PaintHandler.prototype.param = function (key, value) {
+
     this.options[key] = value === null ? this.el.draw.defaults[key] : value
     this.update()
+
 }
 
 // Returns the plugin
 PaintHandler.prototype.getPlugin = function () {
+
     return this.el.draw.plugins[this.el.type]
+
 }
 
 SVG.extend(SVG.Element, {
+
     // Draw element with mouse
     draw: function (event, options, value) {
 
