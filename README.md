@@ -25,7 +25,7 @@ For a demo see http://svgdotjs.github.io/svg.draw.js/
 ```js
 <div id="myDrawing"></div>
 
-var drawing = new SVG('myDrawing').size(500, 500);
+var drawing = new SVG('myDrawing').size(500, 500)
 drawing.rect().draw()	// Here we init a rectangle and start drawing it
 ```
 
@@ -34,22 +34,22 @@ drawing.rect().draw()	// Here we init a rectangle and start drawing it
 As default the drawing starts with a click on the svg-Element
 
 ```js
-var drawing = SVG('drawing');
-drawing.rect().draw(options);
+var drawing = SVG('drawing')
+drawing.rect().draw(options)
 ```
 
 You can use your own mouse-events. Just pass the event-Object to the draw-Function
 
 ```js
-var drawing = SVG('myDrawing');
-var rect = drawing.rect();
+var drawing = SVG('myDrawing')
+var rect = drawing.rect()
 
 drawing.on('mousedown', function(event){
-		rect.draw(event, options);
-});
+	rect.draw(event, options)
+})
 drawing.on('mouseup', function(event){
-		rect.draw(event);
-});
+	rect.draw(event)
+})
 ```
 
 The addon automatically knows when to start or stop drawing (most shapes start with the first event and stop with the second).
@@ -62,10 +62,10 @@ See the next chapter for that.
 
 ```js
 // Finishes the poly-shape
-polygon.draw('done');
+polygon.draw('done')
 
 // Cancels drawing of a shape, removes it
-polygon.draw('cancel');
+polygon.draw('cancel')
 
 /* The following are only useful in edge-cases */
 
@@ -105,11 +105,11 @@ Each event-object holds the relative position to the parent-Object of the Shape 
 Binding a function to the Event is easy
 
 ```js
-var draw = SVG('drawing');
-var rect = draw.rect().draw();
+var draw = SVG('drawing')
+var rect = draw.rect().draw()
 rect.on('drawstart', function(event){
-		console.log(event.detail); // Holds event, current Point-coords and matrix
-});
+	console.log(event.detail) // Holds event, current Point-coords and matrix
+})
 ```
 
 # Plugins
