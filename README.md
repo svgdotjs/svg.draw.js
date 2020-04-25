@@ -120,7 +120,7 @@ Any other type you want to draw and is available through `SVG.invent` (e.g. imag
 For example:
 
 ```js
-	SVG.Element.prototype.draw.extend('line polyline polygon', {
+SVG.Element.prototype.draw.extend('line polyline polygon', {
 
 	// add methods here which should be added to the draw-object
 	// e.g.
@@ -139,7 +139,7 @@ Method `calc` is always needed which updates the point of the shape.
 You also can extend two shape-types at once:
 
 ```js
-	SVG.Element.prototype.draw.extend({
+SVG.Element.prototype.draw.extend({
 
 	'line polyline polygon': {
 		// add methods here which should be added to the draw-object
