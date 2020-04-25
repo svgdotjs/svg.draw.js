@@ -264,8 +264,17 @@
         var circle
         var update = true
         var point, matrix
+        var realLine
+        var currentPoint
 
         canvas.on('dblclick', function start (event) {
+          printXY(event)
+          if (currentPoint) {
+            event = new CustomEvent('MouseEvent')
+            event.clientX = currentPoint.clientX
+            event.clientY = currentPoint.clientY
+          }
+          // debugger
           polyline.draw(event)
         })
 
@@ -276,7 +285,7 @@
         polyline.on('drawstart', function (event) {
           point = event.detail.p.clone()
           matrix = event.detail.m
-          
+
           circle = createCircle(canvas)
 
           document.addEventListener('keydown', function (event) {
@@ -289,14 +298,16 @@
         })
 
         polyline.on('drawpoint', function (event) {
+          console.log('drawpoint')
+          printXY(event.detail.event)
           point = event.detail.p.clone()
           circle.remove()
           circle = createCircle(canvas)
         })
 
         polyline.on('drawupdate', function (event) {
+          console.log('drawupdate')
           if (update) {
-
             var d = distance(point, event.detail.p)
             circle.radius(d)
             // debugger
@@ -308,16 +319,17 @@
               clientY: snappedPoint.y
             }
 
-            // console.clear()
-            // console.log(point, event.detail.p)
-            // console.dir(snappedPoint)
-            // debugger
-            // console.log(event.detail.event.clientX, event.detail.event.clientY)
+            printXY(emulatedMouseEvent)
+            currentPoint = emulatedMouseEvent
 
             update = false
             polyline.draw('update', emulatedMouseEvent)
           }
         })
+
+        function printXY (obj) {
+          console.log(obj.clientX, obj.clientY)
+        }
 
         function createCircle (canvas) {
           var r = 20
@@ -333,8 +345,17 @@
         //   return circle.node.r.baseVal.value
         // }
 
-        function distance (vector1, vector2) {
-          return Math.sqrt(Math.pow(subX(vector1, vector2), 2) + Math.pow(subY(vector1, vector2), 2))
+        function distance (v1, v2) {
+          if (typeof v1 === "number") return distanceOfNumbers(v1, v2)
+          return distanceOfVectors(v1, v2)
+        }
+
+        function distanceOfVectors (vector1, vector2) {
+          return distanceOfNumbers(subX(vector1, vector2), subY(vector1, vector2))
+        }
+
+        function distanceOfNumbers (n1, n2) {
+          return Math.sqrt(Math.pow(n1, 2) + Math.pow(n2, 2))
         }
 
         function subX (v1, v2) {
@@ -349,12 +370,12 @@
           // solution from https://stackoverflow.com/a/42510911/205696
           var deltaX = subX(currentPoint, startPoint),
               deltaY = subY(currentPoint, startPoint),
-              dist = distance(currentPoint, startPoint)
+              dist = distance(deltaX, deltaY)
 
           var angle = Math.atan2(deltaY, deltaX)
           // var snappedAngle = (angle / Math.PI * 4) / 4 * Math.PI
           var snappedAngle = Math.round(angle / Math.PI * 4) / 4 * Math.PI
-          console.log(snappedAngle)
+          // console.log(snappedAngle)
 
           // console.log(deltaX, deltaY, dist, angle, snappedAngle)
           // console.log(startPoint, currentPoint)
@@ -372,12 +393,12 @@
 
         function snap () {}
 
-        function transformPoint (point, matrix) {
-          this.p.x = x - (this.offset.x - window.pageXOffset)
-          this.p.y = y - (this.offset.y - window.pageYOffset)
+        // function transformPoint (point, matrix) {
+        //   this.p.x = x - (this.offset.x - window.pageXOffset)
+        //   this.p.y = y - (this.offset.y - window.pageYOffset)
 
-          return this.p.transform(this.m)
-        }
+        //   return this.p.transform(this.m)
+        // }
       }
     </script>
     <script src="//localhost:35729/livereload.js"></script>
