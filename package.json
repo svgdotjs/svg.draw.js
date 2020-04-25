@@ -4,7 +4,8 @@
   "scripts": {
     "build": "grunt",
     "build:watch": "grunt watch",
-    "hint": "grunt eslint"
+    "hint": "grunt eslint",
+    "start:demo": "python3 -m http.server"
   },
   "description": "An extension for svg.js which allows to draw elements with mouse",
   "keywords": [

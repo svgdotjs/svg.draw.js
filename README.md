@@ -85,7 +85,7 @@ The following options can be used to modify the behavior of the addon:
 
 - `snapToGrid`: Specifies a grid to which a point is aligned (`default:1`)
 
-**Note** that you can specify the options only on the first call. When you want to change the options while drawing use `polygon.draw('params', key, value)` This is useful when you want to activate the grid-option when ctrl or soemthing is pressed.
+**Note** that you can specify the options only on the first call. When you want to change the options while drawing use `polygon.draw('params', key, value)` This is useful when you want to activate the grid-option when ctrl or something is pressed.
 
 # Events
 
@@ -153,7 +153,7 @@ SVG.Element.prototype.draw.extend({
 	}
 
 
-	'circle':{
+	'circle': {
 		// something
 	}
 }

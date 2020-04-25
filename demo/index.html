@@ -258,15 +258,15 @@
       }
 
       function degree45 () {
+        var ENTER = 13
         var canvas = new SVG('degree45')
         var polyline = canvas.polyline().fill('none').stroke({width:2})
+        var circle
         var update = true
-        // var offset = {x:0,y:0}
-        var point
+        var point, matrix
 
-        canvas.on('dblclick', function (event) {
-          point = event
-          polyline.draw('start', event)
+        canvas.on('dblclick', function start (event) {
+          polyline.draw(event)
         })
 
         canvas.on('mousemove', function (event) {
@@ -274,11 +274,13 @@
         })
 
         polyline.on('drawstart', function (event) {
-          // point = event.detail.p.clone()
-          // point = event
+          point = event.detail.p.clone()
+          matrix = event.detail.m
+          
+          circle = createCircle(canvas)
 
           document.addEventListener('keydown', function (event) {
-            if (event.keyCode == 13) {
+            if (event.keyCode === ENTER) {
               polyline.draw('done')
               polyline.off('drawstart')
               document.removeEventListener('keydown', this)
@@ -286,42 +288,68 @@
           })
         })
 
-        // polyline.on('drawpoint', function (event) {
-        //   point = event.detail.p.clone()
-        //   point = event
-        // })
+        polyline.on('drawpoint', function (event) {
+          point = event.detail.p.clone()
+          circle.remove()
+          circle = createCircle(canvas)
+        })
 
         polyline.on('drawupdate', function (event) {
-          // we save the current scrolling-offset here
-          // offset = { x: window.pageXOffset, y: window.pageYOffset }
-
           if (update) {
-            // debugger
-            // var snappedPoint = snapTo45(point, event.detail.p)
-            // console.log(point, event.detail.p, snappedPoint)
-            console.clear()
-            console.log("client", {x:event.detail.event.clientX,y:event.detail.event.clientY})
-            // console.log("our point", point)
-            // console.log("svg.draw point", event.detail.p)
-            console.log("svg.draw point", {x:point.clientX,y:point.clientY})
-            // console.log("snapped", snappedPoint)
-            // console.log("fixed", snappedPoint.transform(canvas.screenCTM().inverse()))
 
-            var startPoint = { x: point.clientX, y: point.clientY }
-            var currentPoint = { x: event.detail.event.clientX, y: event.detail.event.clientY }
-            var snappedPoint = snapTo45(startPoint, currentPoint)
+            var d = distance(point, event.detail.p)
+            circle.radius(d)
+            // debugger
+            var snappedPoint = snapTo45(point, event.detail.p)
+              .transform(matrix.inverse())
+
+            var emulatedMouseEvent = {
+              clientX: snappedPoint.x,
+              clientY: snappedPoint.y
+            }
+
+            // console.clear()
+            // console.log(point, event.detail.p)
+            // console.dir(snappedPoint)
+            // debugger
+            // console.log(event.detail.event.clientX, event.detail.event.clientY)
 
             update = false
-
-            polyline.draw('update', snappedPoint)
+            polyline.draw('update', emulatedMouseEvent)
           }
         })
 
+        function createCircle (canvas) {
+          var r = 20
+          var circle = canvas
+            .circle(r)
+            .stroke({ width:1 })
+            .fill("none")
+
+          return circle.move(point.x - r/2, point.y - r/2)
+        }
+
+        // function getR (circle) {
+        //   return circle.node.r.baseVal.value
+        // }
+
+        function distance (vector1, vector2) {
+          return Math.sqrt(Math.pow(subX(vector1, vector2), 2) + Math.pow(subY(vector1, vector2), 2))
+        }
+
+        function subX (v1, v2) {
+          return v1.x - v2.x
+        }
+
+        function subY(v1, v2) {
+          return v1.y - v2.y
+        }
+
         function snapTo45 (startPoint, currentPoint) {
           // solution from https://stackoverflow.com/a/42510911/205696
-          var deltaX = currentPoint.x - startPoint.x,
-              deltaY = currentPoint.y - startPoint.y,
-              dist = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2))
+          var deltaX = subX(currentPoint, startPoint),
+              deltaY = subY(currentPoint, startPoint),
+              dist = distance(currentPoint, startPoint)
 
           var angle = Math.atan2(deltaY, deltaX)
           // var snappedAngle = (angle / Math.PI * 4) / 4 * Math.PI
@@ -332,14 +360,23 @@
           // console.log(startPoint, currentPoint)
           // console.log(dist)
 
-          return {
-            clientX: startPoint.x + dist * Math.cos(snappedAngle),
-            clientY: startPoint.y + dist * Math.sin(snappedAngle)
-          }
-          // return new SVG.Point(
-          //   startPoint.x + dist * Math.cos(snappedAngle),
-          //   startPoint.y + dist * Math.sin(snappedAngle)
-          // )
+          // return {
+          //   clientX: startPoint.x + dist * Math.cos(snappedAngle),
+          //   clientY: startPoint.y + dist * Math.sin(snappedAngle)
+          // }
+          return new SVG.Point(
+            startPoint.x + dist * Math.cos(snappedAngle),
+            startPoint.y + dist * Math.sin(snappedAngle)
+          )
+        }
+
+        function snap () {}
+
+        function transformPoint (point, matrix) {
+          this.p.x = x - (this.offset.x - window.pageXOffset)
+          this.p.y = y - (this.offset.y - window.pageYOffset)
+
+          return this.p.transform(this.m)
         }
       }
     </script>
