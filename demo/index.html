@@ -172,14 +172,14 @@
     <script>
       'use strict'
 
-      rect()
-      rect_transformed()
-      polygon()
-      ellipse()
-      circle()
-      polygonGrid()
-      polygonGridOnCtrl()
-      rectNoClick()
+      // rect()
+      // rect_transformed()
+      // polygon()
+      // ellipse()
+      // circle()
+      // polygonGrid()
+      // polygonGridOnCtrl()
+      // rectNoClick()
       degree45()
 
       function rect () {
@@ -232,6 +232,7 @@
             if(e.keyCode == 13){
               poly.draw('done');
               poly.off('drawstart');
+
             }
             if(e.keyCode == 17){
               poly.draw('param', 'snapToGrid', 20);
@@ -263,55 +264,71 @@
         var polyline = canvas.polyline().fill('none').stroke({width:2})
         var circle
         var update = true
-        var point, matrix
+        var startPoint, matrix
         var realLine
         var currentPoint
 
-        canvas.on('dblclick', function start (event) {
+        canvas.on('dblclick', function (event) {
           printXY(event)
+
           if (currentPoint) {
             event = new CustomEvent('MouseEvent')
             event.clientX = currentPoint.clientX
             event.clientY = currentPoint.clientY
           }
-          // debugger
-          polyline.draw(event)
+
+          polyline.draw('point', event)
+
+          if (realLine) realLine.remove()
+
+          realLine = canvas
+            .line()
+            .stroke({width:1, color:'rgb(255, 0, 0)'})
+            .opacity(.4)
         })
 
-        canvas.on('mousemove', function (event) {
+        canvas.on('mousemove', function () {
           update = true
         })
 
         polyline.on('drawstart', function (event) {
-          point = event.detail.p.clone()
+          startPoint = event.detail.p.clone()
           matrix = event.detail.m
 
-          circle = createCircle(canvas)
+          circle = createCircle(canvas, startPoint)
 
           document.addEventListener('keydown', function (event) {
             if (event.keyCode === ENTER) {
+              circle.remove()
+              realLine.remove()
               polyline.draw('done')
-              polyline.off('drawstart')
+              polyline.off()
+              canvas.off()
               document.removeEventListener('keydown', this)
             }
           })
         })
 
         polyline.on('drawpoint', function (event) {
-          console.log('drawpoint')
+          // console.log('drawpoint')
           printXY(event.detail.event)
-          point = event.detail.p.clone()
+          startPoint = event.detail.p.clone()
           circle.remove()
-          circle = createCircle(canvas)
+          circle = createCircle(canvas, startPoint)
         })
 
         polyline.on('drawupdate', function (event) {
-          console.log('drawupdate')
+          // console.log('drawupdate')
+
           if (update) {
-            var d = distance(point, event.detail.p)
+            var p = event.detail.p
+            realLine.plot(startPoint.x, startPoint.y, p.x, p.y)
+
+            var d = distance(startPoint, p)
             circle.radius(d)
+
             // debugger
-            var snappedPoint = snapTo45(point, event.detail.p)
+            var snappedPoint = snapTo45(startPoint, p)
               .transform(matrix.inverse())
 
             var emulatedMouseEvent = {
@@ -328,17 +345,18 @@
         })
 
         function printXY (obj) {
-          console.log(obj.clientX, obj.clientY)
+          // console.log(obj.clientX, obj.clientY)
         }
 
-        function createCircle (canvas) {
+        function createCircle (canvas, point) {
           var r = 20
           var circle = canvas
             .circle(r)
-            .stroke({ width:1 })
+            .stroke({ width:1, dasharray: '4 10' })
             .fill("none")
+            .move(point.x - r/2, point.y - r/2)
 
-          return circle.move(point.x - r/2, point.y - r/2)
+          return circle
         }
 
         // function getR (circle) {
@@ -390,8 +408,6 @@
             startPoint.y + dist * Math.sin(snappedAngle)
           )
         }
-
-        function snap () {}
 
         // function transformPoint (point, matrix) {
         //   this.p.x = x - (this.offset.x - window.pageXOffset)
