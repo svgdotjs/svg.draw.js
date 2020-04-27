@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How do I draw an svg polyline with 45 degree?</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="demo.css">
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+</head>
+<body>
+    <div id="container">
+        <h1>svg.draw.js - Demo</h1>
+
+        <div class="box">
+          <h2>How do I draw an svg polyline with 45 degree?</h2>
+          https://stackoverflow.com/questions/59585107/how-do-i-draw-an-svg-polyline-with-45-degree
+          <div id="canvas"></div>
+          <script src="svg.js"></script>
+        <script src="../dist/svg.draw.js"></script>
+        <script>
+            'use strict'
+
+            const poly3 = new SVG('canvas').size('100%', '100%');
+            const line = poly3.polyline(null).fill('none').stroke({width: 2}).draw();
+            poly3.on('dblclick', event => {
+                line.draw('start', event);
+            })
+
+            poly3.on('mousemove',event=>{
+                const position=Object.assign({},event)
+                console.log('ttttt')
+                let x=event.x - this.startX;
+                let y=event.y - this.startY;
+                let r = Math.sqrt(x*x + y*y);
+                let angle = (Math.atan2(y, x) / Math.PI * 180);
+                angle = (angle) % 360 + 180;
+
+                if (angle <= 22.5 || angle >= 337.5) {
+                    angle = 0;
+                } else if (angle <= 67.5) {
+                    angle = 45;
+                } else if (angle <= 112.5) {
+                    angle = 90;
+                } else if (angle <= 157.5) {
+                    angle = 135
+                } else if (angle <= 202.5) {
+                    angle = 180
+                } else if (angle <= 247.5) {
+                    angle = 225
+                } else if (angle <= 292.5) {
+                    angle = 270
+                } else if (angle < 337.5) {
+                    angle = 315
+                }
+                angle -= 180;
+
+                let cosx = r * Math.cos(angle * Math.PI / 180);
+                let sinx = r * Math.sin(angle * Math.PI / 180);
+
+                console.log(cosx, sinx)
+            })
+          </script>
+        </div>
+    </div>
+</body>
+</html>

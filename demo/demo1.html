@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo 1</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body,
+        svg {
+            margin: 0;
+            padding: 0;
+        }
+
+        #canvas {
+            height: calc(100vh - 3em);
+            border: 1px dotted black;
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        <a href="https://stackoverflow.com/questions/59585107/how-do-i-draw-an-svg-polyline-with-45-degree">
+            stackoverflow.com/.../how-do-i-draw-an-svg-polyline-with-45-degree</a>
+    </p>
+    <div id="canvas"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.min.js"
+        integrity="sha256-DSAVgUuz6YXM7pUOvn+Lc40Ek6cWvBgCBU1jsx72Dqg=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/svg.draw.js@2.0.4/dist/svg.draw.js"></script>
+    <script>
+    'use strict'
+
+    const poly3 = SVG('canvas')
+    const line = poly3.polyline().fill('none').stroke({
+        width: 2
+    })
+
+    let update = true
+    let snappedPoint
+
+    const startPoint = {
+        x: 0,
+        y: 0
+    }
+
+    poly3.on('dblclick', event => {
+        const { clientX,  clientY } = snappedPoint || event
+        startPoint.x = clientX
+        startPoint.y = clientY
+
+        line.draw('point', snappedPoint || event)
+    })
+
+    poly3.on('mousemove', () => {
+        update = true
+    })
+
+    line.on('drawupdate', event => {
+        if (update) {
+            update = false
+            snappedPoint = snapTo45(startPoint, event.detail.p)
+            line.draw('update', snappedPoint)
+        }
+    })
+
+    function snapTo45(startPoint, currentPoint) {
+        // solution from https://stackoverflow.com/a/42510911/205696
+        const deltaX = currentPoint.x - startPoint.x,
+            deltaY = currentPoint.y - startPoint.y,
+            dist = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2))
+
+        const angle = Math.atan2(deltaY, deltaX)
+        const snappedAngle = Math.round(angle / Math.PI * 4) / 4 * Math.PI
+
+        return {
+            clientX: startPoint.x + dist * Math.cos(snappedAngle),
+            clientY: startPoint.y + dist * Math.sin(snappedAngle)
+        }
+    }
+    </script>
+</body>
+
+</html>
