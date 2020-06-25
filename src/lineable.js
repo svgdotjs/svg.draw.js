@@ -15,9 +15,10 @@
             this.el.plot(arr);
 
             // We draw little circles around each point
-            // This is absolutely not needed and maybe removed in a later release
-            this.drawCircles();
-
+            // This can be disabled by setting { drawCircles: false } option
+            if (this.options.drawCircles) {
+                this.drawCircles();
+            }
         },
 
 
@@ -32,7 +33,10 @@
             }
 
             this.el.plot(arr);
-            this.drawCircles();
+
+            if (this.options.drawCircles) {
+                this.drawCircles();
+            }
         },
 
         point:function(e){
@@ -45,7 +49,10 @@
                 arr.push(this.snapToGrid([p.x, p.y]));
 
                 this.el.plot(arr);
-                this.drawCircles();
+
+                if (this.options.drawCircles) {
+                    this.drawCircles();
+                }
 
                 // Fire the `drawpoint`-event, which holds the coords of the new Point
                 this.el.fire('drawpoint', {event:e, p:{x:p.x, y:p.y}, m:this.m});

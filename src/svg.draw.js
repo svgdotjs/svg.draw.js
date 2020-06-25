@@ -222,7 +222,8 @@
 
     // Default values. Can be changed for the whole project if needed
     SVG.Element.prototype.draw.defaults = {
-        snapToGrid: 1        // Snaps to a grid of `snapToGrid` px
+        snapToGrid: 1,        // Snaps to a grid of `snapToGrid` px
+        drawCircles: true     // Draw little circles around line/polyline/polygon points
     };
 
     SVG.Element.prototype.draw.extend = function(name, obj){
