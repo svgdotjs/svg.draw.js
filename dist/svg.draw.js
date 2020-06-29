@@ -1,6 +1,6 @@
-/*! svg.draw.js - v2.0.4 - 2019-11-28
+/*! svg.draw.js - v2.0.4 - 2020-06-29
 * https://github.com/svgdotjs/svg.draw.js
-* Copyright (c) 2019 Ulrich-Matthias Schäfer; Licensed MIT */
+* Copyright (c) 2020 Ulrich-Matthias Schäfer; Licensed MIT */
 
 ;(function () {
     // Our Object which manages drawing
@@ -227,7 +227,8 @@
 
     // Default values. Can be changed for the whole project if needed
     SVG.Element.prototype.draw.defaults = {
-        snapToGrid: 1        // Snaps to a grid of `snapToGrid` px
+        snapToGrid: 1,        // Snaps to a grid of `snapToGrid` px
+        drawCircles: true     // Draw little circles around line/polyline/polygon points
     };
 
     SVG.Element.prototype.draw.extend = function(name, obj){
@@ -312,9 +313,10 @@
             this.el.plot(arr);
 
             // We draw little circles around each point
-            // This is absolutely not needed and maybe removed in a later release
-            this.drawCircles();
-
+            // This can be disabled by setting { drawCircles: false } option
+            if (this.options.drawCircles) {
+                this.drawCircles();
+            }
         },
 
 
@@ -329,7 +331,10 @@
             }
 
             this.el.plot(arr);
-            this.drawCircles();
+
+            if (this.options.drawCircles) {
+                this.drawCircles();
+            }
         },
 
         point:function(e){
@@ -342,7 +347,10 @@
                 arr.push(this.snapToGrid([p.x, p.y]));
 
                 this.el.plot(arr);
-                this.drawCircles();
+
+                if (this.options.drawCircles) {
+                    this.drawCircles();
+                }
 
                 // Fire the `drawpoint`-event, which holds the coords of the new Point
                 this.el.fire('drawpoint', {event:e, p:{x:p.x, y:p.y}, m:this.m});
