@@ -29,6 +29,7 @@ class PaintHandler {
     this.startPoint = null
     this.lastUpdateCall = null
     this.options = {}
+    this.set = []
 
     // Merge options and defaults
     for (const i in PaintHandler.defaults) {

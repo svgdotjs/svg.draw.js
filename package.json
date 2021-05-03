@@ -1,5 +1,5 @@
 {
-  "name": "svg.draw.js",
+  "name": "@svgdotjs/svg.draw.js",
   "version": "3.0.0",
   "description": "An extension for svg.js which allows to draw elements with mouse",
   "main": "dist/svg.draw.js",
@@ -7,11 +7,6 @@
   "jsdelivr": "dist/svg.draw.min.js",
   "browser": "dist/svg.draw.esm.js",
   "module": "src/svg.draw.js",
-  "files": [
-    "/dist",
-    "/src",
-    "/svg.draw.js.d.ts"
-  ],
   "keywords": [
     "svg.js",
     "draw",
@@ -19,7 +14,7 @@
   ],
   "bugs": "https://github.com/svgdotjs/svg.draw.js/issues",
   "license": "MIT",
-  "typings": "/svg.draw.js.d.ts",
+  "typings": "./svg.draw.js.d.ts",
   "author": {
     "name": "Ulrich-Matthias Schäfer"
   },
