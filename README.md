@@ -26,8 +26,8 @@ Draw your first rectangle using this simple piece of code:
 ```html
 <div id="myDrawing"></div>
 <script>
-  var drawing = new SVG('myDrawing').size(500, 500)
-  drawing.rect().draw() // Here we init a rectangle and start drawing it
+  var canvas = new SVG().addTo('#myDrawing').size(500, 500)
+  canvas.rect().draw() // Here we init a rectangle and start drawing it
 </script>
 ```
 
@@ -36,20 +36,18 @@ Draw your first rectangle using this simple piece of code:
 As default the drawing starts with a click on the SVG element
 
 ```js
-var drawing = SVG('drawing')
-drawing.rect().draw(options)
+canvas.rect().draw(options)
 ```
 
 You can use your own mouse events. Just pass the event object to the `draw` Function
 
 ```js
-var drawing = SVG('myDrawing')
-var rect = drawing.rect()
+var canvas = drawing.rect()
 
-drawing.on('mousedown', function (event) {
+canvas.on('mousedown', function (event) {
   rect.draw(event, options)
 })
-drawing.on('mouseup', function (event) {
+canvas.on('mouseup', function (event) {
   rect.draw(event)
 })
 ```
@@ -78,7 +76,7 @@ polygon.draw('cancel')
 polygon.draw('point', event)
 
 // Draws the point while moving the mouse (basically the animation)
-polygon.draw('update', evnt)
+polygon.draw('update', event)
 
 // Stop drawing, cleans up
 polygon.draw('stop', event)
@@ -91,7 +89,7 @@ The following options can be used to modify the behavior of the addon:
 - `snapToGrid`: Specifies the size of the grid to which a point is aligned (`default:1`)
 - `drawCircles`: Specifies the need to draw little circles around the line/polyline/polygon points (`default: true`)
 
-**Note** that you can specify the options only on the first call. When you want to change the options while drawing use `polygon.draw('params', key, value)` This is useful, for example if you pnly want to activate the grid option while CTRL is held down.
+**Note** that you can specify the options only on the first call. When you want to change the options while drawing use `polygon.draw('params', key, value)` This is useful, for example if you only want to activate the grid option while CTRL is held down.
 
 # Events
 
@@ -111,8 +109,7 @@ Each event object holds the relative position to the parent object of the shape 
 Binding a function to the event is easy
 
 ```js
-var draw = SVG('drawing')
-var rect = draw.rect().draw()
+var rect = canvas.rect().draw()
 rect.on('drawstart', function (event) {
   console.log(event.detail) // Holds event, current point coords and matrix
 })
@@ -121,7 +118,7 @@ rect.on('drawstart', function (event) {
 # Plugins
 
 Currently `svg.draw.js` only supports all the basic shapes (line, polyline, polygon, rect, image, circle, ellipse).
-Any other type you want to draw, and is available through `SVG.invent` (e.g. image or your own element), can be added using a plugin which just serves the functions to draw the shape.
+Any other type you want to draw, can be added using a plugin which just serves the functions to draw the shape.
 
 For example:
 
@@ -166,8 +163,3 @@ SVG.Element.prototype.draw.extend({
 ```
 
 See the implementation of all shapes as examples.
-
-# Changes in svg.draw.js v3
-
-- Updated to support svg.js v3
-- Added type definitions
