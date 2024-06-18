@@ -1,9 +1,9 @@
-import babel from 'rollup-plugin-babel'
-import * as pkg from '../package.json'
+import pkg from '../package.json' with { type: 'json' }
+import babel from '@rollup/plugin-babel'
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
 import filesize from 'rollup-plugin-filesize'
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
-import { uglify } from 'rollup-plugin-uglify'
+import terser from '@rollup/plugin-terser'
 
 const buildDate = Date()
 
@@ -23,7 +23,7 @@ const headerShort = `/*! ${pkg.name} v${pkg.version} ${pkg.license}*/;`
 const getBabelConfig = (targets, corejs = false) =>
   babel({
     include: 'src/**',
-    runtimeHelpers: true,
+    babelHelpers: 'runtime',
     babelrc: false,
     presets: [
       [
@@ -38,17 +38,17 @@ const getBabelConfig = (targets, corejs = false) =>
     ],
     plugins: [
       [
-        '@babel/plugin-transform-runtime',
+        '@babel/transform-runtime',
         {
-          corejs: corejs,
-          helpers: true,
+          version: '^7.24.7',
+          regenerator: false,
           useESModules: true
-        },
+        }
       ],
       [
-        '@babel/plugin-proposal-class-properties',
+        'polyfill-corejs3',
         {
-            loose: true
+          method: 'usage-pure'
         }
       ]
     ]
@@ -65,10 +65,10 @@ const config = (node = false, min = false, esm = false) => ({
     file: esm
       ? './dist/svg.draw.esm.js'
       : node
-      ? './dist/svg.draw.node.js'
-      : min
-      ? './dist/svg.draw.min.js'
-      : './dist/svg.draw.js',
+        ? './dist/svg.draw.node.js'
+        : min
+          ? './dist/svg.draw.min.js'
+          : './dist/svg.draw.js',
     format: esm ? 'esm' : node ? 'cjs' : 'iife',
     sourcemap: true,
     banner: headerLong,
@@ -88,7 +88,7 @@ const config = (node = false, min = false, esm = false) => ({
     filesize(),
     !min
       ? {}
-      : uglify({
+      : terser({
           mangle: {
             reserved: classes
           },
@@ -102,4 +102,4 @@ const config = (node = false, min = false, esm = false) => ({
 // [node, minified, esm]
 const modes = [[false], [false, true], [false, false, true]]
 
-export default modes.map(m => config(...m))
+export default modes.map((m) => config(...m))

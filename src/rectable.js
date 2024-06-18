@@ -1,7 +1,7 @@
 export const rectable = {
   NAME: 'rect image',
 
-  init: function (e) {
+  init: function () {
     var p = this.startPoint
 
     this.el.attr({ x: p.x, y: p.y, height: 0, width: 0 })

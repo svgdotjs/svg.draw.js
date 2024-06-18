@@ -1,7 +1,7 @@
 export const lineable = {
   NAME: 'line polyline polygon',
 
-  init: function (e) {
+  init: function () {
     // When we draw a polygon, we immediately need 2 points.
     // One start-point and one point at the mouse-position
 
@@ -91,11 +91,7 @@ export const lineable = {
       )
 
       this.set.push(
-        this.parent
-          .circle(5)
-          .stroke({ width: 1 })
-          .fill('#ccc')
-          .center(p.x, p.y)
+        this.parent.circle(5).stroke({ width: 1 }).fill('#ccc').center(p.x, p.y)
       )
     }
   },

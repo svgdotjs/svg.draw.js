@@ -6,7 +6,6 @@ import { rectable } from './rectable'
 
 // Our Object which manages drawing
 class PaintHandler {
-
   // Default values. Can be changed for the whole project if needed
   static defaults = {
     snapToGrid: 1, // Snaps to a grid of `snapToGrid` px
@@ -16,7 +15,7 @@ class PaintHandler {
   // Container for all types not specified here
   static plugins = {}
 
-  constructor (el, event, options) {
+  constructor(el, event, options) {
     el.remember('_paintHandler', this)
     this.el = el
 
@@ -57,14 +56,14 @@ class PaintHandler {
     }
   }
 
-  transformPoint (x, y) {
+  transformPoint(x, y) {
     this.p.x = x - (this.offset.x - window.pageXOffset)
     this.p.y = y - (this.offset.y - window.pageYOffset)
 
     return this.p.matrixTransform(this.m)
   }
 
-  start (event) {
+  start(event) {
     var _this = this
 
     // get the current transform matrix from screen to element (offset corrected)
@@ -74,10 +73,14 @@ class PaintHandler {
     this.offset = { x: window.pageXOffset, y: window.pageYOffset }
 
     // we want to snap in screen-coords, so we have to scale the snapToGrid accordingly
-    this.options.snapToGrid *= Math.sqrt(this.m.a * this.m.a + this.m.b * this.m.b)
+    this.options.snapToGrid *= Math.sqrt(
+      this.m.a * this.m.a + this.m.b * this.m.b
+    )
 
     // save the startpoint
-    this.startPoint = this.snapToGrid(this.transformPoint(event.clientX, event.clientY))
+    this.startPoint = this.snapToGrid(
+      this.transformPoint(event.clientX, event.clientY)
+    )
 
     // the plugin may do some initial work
     if (this.init) {
@@ -98,7 +101,7 @@ class PaintHandler {
 
   // This function draws a point if the element is a polyline or polygon
   // Otherwise it will just stop drawing the shape cause we are done
-  point (event) {
+  point(event) {
     if (this.point !== this.start) return this.start(event)
 
     if (this.pointPlugin) {
@@ -110,7 +113,7 @@ class PaintHandler {
   }
 
   // The stop-function does the cleanup work
-  stop (event) {
+  stop(event) {
     if (event) {
       this.update(event)
     }
@@ -135,7 +138,7 @@ class PaintHandler {
   }
 
   // Updates the element while moving the cursor
-  update (event) {
+  update(event) {
     if (!event && this.lastUpdateCall) {
       event = this.lastUpdateCall
     }
@@ -154,7 +157,7 @@ class PaintHandler {
   }
 
   // Called from outside. Finishs a poly-element
-  done () {
+  done() {
     this.calc()
     this.stop()
 
@@ -162,7 +165,7 @@ class PaintHandler {
   }
 
   // Called from outside. Cancels a poly-element
-  cancel () {
+  cancel() {
     // stop drawing and remove the element
     this.stop()
     this.el.remove()
@@ -171,42 +174,51 @@ class PaintHandler {
   }
 
   // Calculate the corrected position when using `snapToGrid`
-  snapToGrid (draw) {
+  snapToGrid(draw) {
     var temp = null
 
     // An array was given. Loop through every element
     if (draw.length) {
-      temp = [draw[0] % this.options.snapToGrid, draw[1] % this.options.snapToGrid]
-      draw[0] -= temp[0] < this.options.snapToGrid / 2 ? temp[0] : temp[0] - this.options.snapToGrid
-      draw[1] -= temp[1] < this.options.snapToGrid / 2 ? temp[1] : temp[1] - this.options.snapToGrid
+      temp = [
+        draw[0] % this.options.snapToGrid,
+        draw[1] % this.options.snapToGrid
+      ]
+      draw[0] -=
+        temp[0] < this.options.snapToGrid / 2
+          ? temp[0]
+          : temp[0] - this.options.snapToGrid
+      draw[1] -=
+        temp[1] < this.options.snapToGrid / 2
+          ? temp[1]
+          : temp[1] - this.options.snapToGrid
       return draw
     }
 
     // Properties of element were given. Snap them all
     for (var i in draw) {
       temp = draw[i] % this.options.snapToGrid
-      draw[i]
-        -= (temp < this.options.snapToGrid / 2 ? temp : temp - this.options.snapToGrid)
-        + (temp < 0 ? this.options.snapToGrid : 0)
+      draw[i] -=
+        (temp < this.options.snapToGrid / 2
+          ? temp
+          : temp - this.options.snapToGrid) +
+        (temp < 0 ? this.options.snapToGrid : 0)
     }
 
     return draw
   }
 
-  param (key, value) {
-    this.options[key] = value === null
-      ? PaintHandler.defaults[key]
-      : value
+  param(key, value) {
+    this.options[key] = value === null ? PaintHandler.defaults[key] : value
 
     this.update()
   }
 
   // Returns the plugin
-  getPlugin () {
+  getPlugin() {
     return PaintHandler.plugins[this.el.type]
   }
 
-  static extend (name, obj) {
+  static extend(name, obj) {
     var plugins = {}
     if (typeof name === 'string') {
       plugins[name] = obj
@@ -234,7 +246,9 @@ extend(Element, {
     }
 
     // get the old Handler or create a new one from event and options
-    var paintHandler = this.remember('_paintHandler') || new PaintHandler(this, event, options || {})
+    var paintHandler =
+      this.remember('_paintHandler') ||
+      new PaintHandler(this, event, options || {})
 
     // When we got an event we have to start/continue drawing
     if (event instanceof Event) {

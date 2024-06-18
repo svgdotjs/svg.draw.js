@@ -1,7 +1,7 @@
 export const ellipse = {
   NAME: 'ellipse',
 
-  init: function (e) {
+  init: function () {
     // We start with a circle with radius 1 at the position of the cursor
     var p = this.startPoint
 

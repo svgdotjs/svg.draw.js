@@ -1,5 +1,4 @@
-svg.draw.js
-===========
+# svg.draw.js
 
 An extension of [svg.js](https://github.com/svgdotjs/svg.js), which allows to draw elements with your mouse
 
@@ -10,11 +9,13 @@ For a demo see http://svgdotjs.github.io/svg.draw.js/
 # Get Started
 
 Install the plugin:
+
 ```sh
 npm install @svgdotjs/svg.js @svgdotjs/svg.draw.js
 ```
 
 Include the script after svg.js into your page
+
 ```html
 <script src="node_modules/@svgdotjs/svg.js"></script>
 <script src="node_modules/@svgdotjs/svg.draw.js"></script>
@@ -25,8 +26,8 @@ Draw your first rectangle using this simple piece of code:
 ```html
 <div id="myDrawing"></div>
 <script>
-	var drawing = new SVG('myDrawing').size(500, 500);
-	drawing.rect().draw() // Here we init a rectangle and start drawing it
+  var drawing = new SVG('myDrawing').size(500, 500)
+  drawing.rect().draw() // Here we init a rectangle and start drawing it
 </script>
 ```
 
@@ -35,22 +36,22 @@ Draw your first rectangle using this simple piece of code:
 As default the drawing starts with a click on the SVG element
 
 ```js
-var drawing = SVG('drawing');
-drawing.rect().draw(options);
+var drawing = SVG('drawing')
+drawing.rect().draw(options)
 ```
 
 You can use your own mouse events. Just pass the event object to the `draw` Function
 
 ```js
-var drawing = SVG('myDrawing');
-var rect = drawing.rect();
+var drawing = SVG('myDrawing')
+var rect = drawing.rect()
 
-drawing.on('mousedown', function(event){
-	rect.draw(event, options);
-});
-drawing.on('mouseup', function(event){
-	rect.draw(event);
-});
+drawing.on('mousedown', function (event) {
+  rect.draw(event, options)
+})
+drawing.on('mouseup', function (event) {
+  rect.draw(event)
+})
 ```
 
 The addon automatically knows when to start or stop drawing (most shapes start with the first event and stop with the second).
@@ -60,14 +61,16 @@ See the next chapter for that.
 # Methods
 
 `svg.draw.js` populates its methods it uses to draw the shape. This is useful in edgecases, but generally not needed (with some exceptions):
-- `done` **must be called** to complete polygons/polylines  
+
+- `done` **must be called** to complete polygons/polylines
 - `cancel` can be called on every shape to stop drawing and remove the shape
+
 ```js
 // Finishes the poly-shape
-polygon.draw('done');
+polygon.draw('done')
 
 // Cancels drawing of a shape, removes it
-polygon.draw('cancel');
+polygon.draw('cancel')
 
 /* The following are only useful in edge-cases */
 
@@ -80,7 +83,7 @@ polygon.draw('update', evnt)
 // Stop drawing, cleans up
 polygon.draw('stop', event)
 ```
-	
+
 # Options
 
 The following options can be used to modify the behavior of the addon:
@@ -108,11 +111,11 @@ Each event object holds the relative position to the parent object of the shape 
 Binding a function to the event is easy
 
 ```js
-var draw = SVG('drawing');
-var rect = draw.rect().draw();
-rect.on('drawstart', function(event){
-	console.log(event.detail); // Holds event, current point coords and matrix
-});
+var draw = SVG('drawing')
+var rect = draw.rect().draw()
+rect.on('drawstart', function (event) {
+  console.log(event.detail) // Holds event, current point coords and matrix
+})
 ```
 
 # Plugins
@@ -163,7 +166,6 @@ SVG.Element.prototype.draw.extend({
 ```
 
 See the implementation of all shapes as examples.
-
 
 # Changes in svg.draw.js v3
 
