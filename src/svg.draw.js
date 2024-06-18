@@ -1,249 +1,256 @@
-    // Our Object which manages drawing
-    function PaintHandler(el, event, options) {
+import { extend, Element, on, off } from '@svgdotjs/svg.js'
+import { circle } from './circle'
+import { ellipse } from './ellipse'
+import { lineable } from './lineable'
+import { rectable } from './rectable'
 
-        this.el = el;
-        el.remember('_paintHandler', this);
-    
-        var _this = this,
-            plugin = this.getPlugin();
+// Our Object which manages drawing
+class PaintHandler {
 
-        this.parent = el.parent(SVG.Nested) || el.parent(SVG.Doc);
-        this.p = this.parent.node.createSVGPoint(); // Helping point for coord transformation
-        this.m = null;  // transformation matrix. We get it when drawing starts
-        this.startPoint = null;
-        this.lastUpdateCall = null;
-        this.options = {};
-        this.set = new SVG.Set();
+  // Default values. Can be changed for the whole project if needed
+  static defaults = {
+    snapToGrid: 1, // Snaps to a grid of `snapToGrid` px
+    drawCircles: true // Draw little circles around line/polyline/polygon points
+  }
 
-        // Merge options and defaults
-        for (var i in this.el.draw.defaults) {
-            this.options[i] = this.el.draw.defaults[i];
-            if (typeof options[i] !== 'undefined') {
-                this.options[i] = options[i];
-            }
-        }
-        
-        if(plugin.point) {
-          plugin['pointPlugin'] = plugin.point;
-          delete plugin.point;
-        }
-        
-        // Import all methods from plugin into object
-        for (var i in plugin){
-            this[i] = plugin[i];
-        }
-        
-        // When we got an event, we use this for start, otherwise we use the click-event as default
-        if (!event) {
-            this.parent.on('click.draw', function (e) {
-                _this.start(e);
-            });
+  // Container for all types not specified here
+  static plugins = {}
 
-        }
+  constructor (el, event, options) {
+    el.remember('_paintHandler', this)
+    this.el = el
 
+    var _this = this
+    var plugin = this.getPlugin()
+
+    this.parent = el.root()
+    this.p = this.parent.node.createSVGPoint() // Helping point for coord transformation
+    this.m = null // transformation matrix. We get it when drawing starts
+    this.startPoint = null
+    this.lastUpdateCall = null
+    this.options = {}
+    this.set = []
+
+    // Merge options and defaults
+    for (const i in PaintHandler.defaults) {
+      this.options[i] = PaintHandler.defaults[i]
+      if (typeof options[i] !== 'undefined') {
+        this.options[i] = options[i]
+      }
     }
 
-    PaintHandler.prototype.transformPoint = function(x, y){
-
-        this.p.x = x - (this.offset.x - window.pageXOffset);
-        this.p.y = y - (this.offset.y - window.pageYOffset);
-        
-        return this.p.matrixTransform(this.m);
-    
+    if (plugin.point) {
+      plugin.pointPlugin = plugin.point
+      delete plugin.point
     }
-    
-    PaintHandler.prototype.start = function (event) {
-    
-        var _this = this;
-    
-        // get the current transform matrix from screen to element (offset corrected)
-        this.m = this.el.node.getScreenCTM().inverse();
 
-        // we save the current scrolling-offset here
-        this.offset = { x: window.pageXOffset, y: window.pageYOffset };
+    // Import all methods from plugin into object
+    for (const i in plugin) {
+      this[i] = plugin[i]
+    }
 
-        // we want to snap in screen-coords, so we have to scale the snapToGrid accordingly
-        this.options.snapToGrid *= Math.sqrt(this.m.a * this.m.a + this.m.b * this.m.b)
+    // When we got an event, we use this for start, otherwise we use the click-event as default
+    if (!event) {
+      this.parent.on('click.draw', function (e) {
+        _this.start(e)
+      })
+    }
+  }
 
-        // save the startpoint
-        this.startPoint = this.snapToGrid(this.transformPoint(event.clientX, event.clientY));
+  transformPoint (x, y) {
+    this.p.x = x - (this.offset.x - window.pageXOffset)
+    this.p.y = y - (this.offset.y - window.pageYOffset)
 
-        // the plugin may do some initial work
-        if(this.init){ this.init(event); }
+    return this.p.matrixTransform(this.m)
+  }
 
-        // Fire our `drawstart`-event. We send the offset-corrected cursor-position along
-        this.el.fire('drawstart', {event:event, p:this.p, m:this.m});
+  start (event) {
+    var _this = this
 
-        // We need to bind the update-function to the mousemove event to keep track of the cursor
-        SVG.on(window, 'mousemove.draw', function (e) {
-            _this.update(e);
-        });
+    // get the current transform matrix from screen to element (offset corrected)
+    this.m = this.el.node.getScreenCTM().inverse()
 
-        // Every consecutive call to start should map to point now
-        this.start = this.point;
+    // we save the current scrolling-offset here
+    this.offset = { x: window.pageXOffset, y: window.pageYOffset }
 
+    // we want to snap in screen-coords, so we have to scale the snapToGrid accordingly
+    this.options.snapToGrid *= Math.sqrt(this.m.a * this.m.a + this.m.b * this.m.b)
 
-    };
+    // save the startpoint
+    this.startPoint = this.snapToGrid(this.transformPoint(event.clientX, event.clientY))
 
-    // This function draws a point if the element is a polyline or polygon
-    // Otherwise it will just stop drawing the shape cause we are done
-    PaintHandler.prototype.point = function (event) {
-        if (this.point != this.start) return this.start(event);
-        
-        if (this.pointPlugin) {
-            return this.pointPlugin(event);
-        }
-    
-        // If this function is not overwritten we just call stop
-        this.stop(event);
-    };
+    // the plugin may do some initial work
+    if (this.init) {
+      this.init(event)
+    }
 
+    // Fire our `drawstart`-event. We send the offset-corrected cursor-position along
+    this.el.fire('drawstart', { event: event, p: this.p, m: this.m })
 
-    // The stop-function does the cleanup work
-    PaintHandler.prototype.stop = function (event) {
-        if (event) {
-            this.update(event);
-        }
-        
-        // Plugin may want to clean something
-        if(this.clean){ this.clean(); }
+    // We need to bind the update-function to the mousemove event to keep track of the cursor
+    on(window, 'mousemove.draw', function (e) {
+      _this.update(e)
+    })
 
-        // Unbind from all events
-        SVG.off(window, 'mousemove.draw');
-        this.parent.off('click.draw');
+    // Every consecutive call to start should map to point now
+    this.start = this.point
+  }
 
-        // remove Refernce to PaintHandler
-        this.el.forget('_paintHandler');
+  // This function draws a point if the element is a polyline or polygon
+  // Otherwise it will just stop drawing the shape cause we are done
+  point (event) {
+    if (this.point !== this.start) return this.start(event)
 
-        // overwrite draw-function since we never need it again for this element
-        this.el.draw = function () {
-        };
+    if (this.pointPlugin) {
+      return this.pointPlugin(event)
+    }
 
-        // Fire the `drawstop`-event
-        this.el.fire('drawstop');
-    };
+    // If this function is not overwritten we just call stop
+    this.stop(event)
+  }
 
-    // Updates the element while moving the cursor
-    PaintHandler.prototype.update = function (event) {
+  // The stop-function does the cleanup work
+  stop (event) {
+    if (event) {
+      this.update(event)
+    }
 
-        if(!event && this.lastUpdateCall){
-            event = this.lastUpdateCall;
-        }
-        
-        this.lastUpdateCall = event;
-        
-        // Get the current transform matrix
-        // it could have been changed since the start or the last update call
-        this.m = this.el.node.getScreenCTM().inverse();
-    
-        // Call the calc-function which calculates the new position and size
-        this.calc(event);
+    // Plugin may want to clean something
+    if (this.clean) {
+      this.clean()
+    }
 
-        // Fire the `drawupdate`-event
-        this.el.fire('drawupdate', {event:event, p:this.p, m:this.m});
-    };
+    // Unbind from all events
+    off(window, 'mousemove.draw')
+    this.parent.off('click.draw')
 
-    // Called from outside. Finishs a poly-element
-    PaintHandler.prototype.done = function () {
-        this.calc();
-        this.stop();
+    // remove Refernce to PaintHandler
+    this.el.forget('_paintHandler')
 
-        this.el.fire('drawdone');
-    };
+    // overwrite draw-function since we never need it again for this element
+    this.el.draw = function () {}
 
-    // Called from outside. Cancels a poly-element
-    PaintHandler.prototype.cancel = function () {
-        // stop drawing and remove the element
-        this.stop();
-        this.el.remove();
+    // Fire the `drawstop`-event
+    this.el.fire('drawstop')
+  }
 
-        this.el.fire('drawcancel');
-    };
+  // Updates the element while moving the cursor
+  update (event) {
+    if (!event && this.lastUpdateCall) {
+      event = this.lastUpdateCall
+    }
 
-    // Calculate the corrected position when using `snapToGrid`
-    PaintHandler.prototype.snapToGrid = function (draw) {
+    this.lastUpdateCall = event
 
-        var temp = null;
+    // Get the current transform matrix
+    // it could have been changed since the start or the last update call
+    this.m = this.el.node.getScreenCTM().inverse()
 
-        // An array was given. Loop through every element
-        if (draw.length) {
-            temp = [draw[0] % this.options.snapToGrid, draw[1] % this.options.snapToGrid];
-            draw[0] -= temp[0] < this.options.snapToGrid / 2 ? temp[0] : temp[0] - this.options.snapToGrid;
-            draw[1] -= temp[1] < this.options.snapToGrid / 2 ? temp[1] : temp[1] - this.options.snapToGrid;
-            return draw;
-        }
+    // Call the calc-function which calculates the new position and size
+    this.calc(event)
 
-        // Properties of element were given. Snap them all
-        for (var i in draw) {
-            temp = draw[i] % this.options.snapToGrid;
-            draw[i] -= (temp < this.options.snapToGrid / 2 ? temp : temp - this.options.snapToGrid) + (temp < 0 ? this.options.snapToGrid : 0);
-        }
+    // Fire the `drawupdate`-event
+    this.el.fire('drawupdate', { event: event, p: this.p, m: this.m })
+  }
 
-        return draw;
-    };
+  // Called from outside. Finishs a poly-element
+  done () {
+    this.calc()
+    this.stop()
 
-    PaintHandler.prototype.param = function (key, value) {
-        this.options[key] = value === null ? this.el.draw.defaults[key] : value;
-        this.update();
-    };
+    this.el.fire('drawdone')
+  }
 
-    // Returns the plugin
-    PaintHandler.prototype.getPlugin = function () {
-        return this.el.draw.plugins[this.el.type];
-    };
+  // Called from outside. Cancels a poly-element
+  cancel () {
+    // stop drawing and remove the element
+    this.stop()
+    this.el.remove()
 
-    SVG.extend(SVG.Element, {
-        // Draw element with mouse
-        draw: function (event, options, value) {
+    this.el.fire('drawcancel')
+  }
 
-            // sort the parameters
-            if (!(event instanceof Event || typeof event === 'string')) {
-                options = event;
-                event = null;
-            }
+  // Calculate the corrected position when using `snapToGrid`
+  snapToGrid (draw) {
+    var temp = null
 
-            // get the old Handler or create a new one from event and options
-            var paintHandler = this.remember('_paintHandler') || new PaintHandler(this, event, options || {});
+    // An array was given. Loop through every element
+    if (draw.length) {
+      temp = [draw[0] % this.options.snapToGrid, draw[1] % this.options.snapToGrid]
+      draw[0] -= temp[0] < this.options.snapToGrid / 2 ? temp[0] : temp[0] - this.options.snapToGrid
+      draw[1] -= temp[1] < this.options.snapToGrid / 2 ? temp[1] : temp[1] - this.options.snapToGrid
+      return draw
+    }
 
-            // When we got an event we have to start/continue drawing
-            if (event instanceof Event) {
-                paintHandler['start'](event);
-            }
+    // Properties of element were given. Snap them all
+    for (var i in draw) {
+      temp = draw[i] % this.options.snapToGrid
+      draw[i]
+        -= (temp < this.options.snapToGrid / 2 ? temp : temp - this.options.snapToGrid)
+        + (temp < 0 ? this.options.snapToGrid : 0)
+    }
 
-            // if event is located in our PaintHandler we handle it as method
-            if (paintHandler[event]) {
-                paintHandler[event](options, value);
-            }
+    return draw
+  }
 
-            return this;
-        }
+  param (key, value) {
+    this.options[key] = value === null
+      ? PaintHandler.defaults[key]
+      : value
 
-    });
+    this.update()
+  }
 
-    // Default values. Can be changed for the whole project if needed
-    SVG.Element.prototype.draw.defaults = {
-        snapToGrid: 1,        // Snaps to a grid of `snapToGrid` px
-        drawCircles: true     // Draw little circles around line/polyline/polygon points
-    };
+  // Returns the plugin
+  getPlugin () {
+    return PaintHandler.plugins[this.el.type]
+  }
 
-    SVG.Element.prototype.draw.extend = function(name, obj){
+  static extend (name, obj) {
+    var plugins = {}
+    if (typeof name === 'string') {
+      plugins[name] = obj
+    } else {
+      plugins = name
+    }
 
-        var plugins = {};
-        if(typeof name === 'string'){
-            plugins[name] = obj;
-        }else{
-            plugins = name;
-        }
+    for (var shapes in plugins) {
+      var shapesArr = shapes.trim().split(/\s+/)
 
-        for(var shapes in plugins){
-            var shapesArr = shapes.trim().split(/\s+/);
+      for (var i in shapesArr) {
+        PaintHandler.plugins[shapesArr[i]] = plugins[shapes]
+      }
+    }
+  }
+}
 
-            for(var i in shapesArr){
-                SVG.Element.prototype.draw.plugins[shapesArr[i]] = plugins[shapes];
-            }
-        }
+extend(Element, {
+  // Draw element with mouse
+  draw: function (event, options, value) {
+    // sort the parameters
+    if (!(event instanceof Event || typeof event === 'string')) {
+      options = event
+      event = null
+    }
 
-    };
+    // get the old Handler or create a new one from event and options
+    var paintHandler = this.remember('_paintHandler') || new PaintHandler(this, event, options || {})
 
-    // Container for all types not specified here
-    SVG.Element.prototype.draw.plugins = {};
+    // When we got an event we have to start/continue drawing
+    if (event instanceof Event) {
+      paintHandler.start(event)
+    }
+
+    // if event is located in our PaintHandler we handle it as method
+    if (paintHandler[event]) {
+      paintHandler[event](options, value)
+    }
+
+    return this
+  }
+})
+
+PaintHandler.extend(rectable.NAME, rectable)
+PaintHandler.extend(lineable.NAME, lineable)
+PaintHandler.extend(ellipse.NAME, ellipse)
+PaintHandler.extend(circle.NAME, circle)

@@ -1,7 +1,12 @@
 {
-  "name": "svg.draw.js",
-  "version": "2.0.4",
+  "name": "@svgdotjs/svg.draw.js",
+  "version": "3.0.0",
   "description": "An extension for svg.js which allows to draw elements with mouse",
+  "main": "dist/svg.draw.js",
+  "unpkg": "dist/svg.draw.min.js",
+  "jsdelivr": "dist/svg.draw.min.js",
+  "browser": "dist/svg.draw.esm.js",
+  "module": "src/svg.draw.js",
   "keywords": [
     "svg.js",
     "draw",
@@ -9,34 +14,65 @@
   ],
   "bugs": "https://github.com/svgdotjs/svg.draw.js/issues",
   "license": "MIT",
+  "typings": "./svg.draw.js.d.ts",
   "author": {
     "name": "Ulrich-Matthias Schäfer"
   },
-  "contributors": {
-    "name": "Ulrich-Matthias Schäfer"
-  },
-  "homepage": "https://github.com/svgdotjs/svg.draw.js",
-  "main": "dist/svg.draw.js",
-  "files": [
-    "dist/"
+  "contributors": [
+    {
+      "name": "Ulrich-Matthias Schäfer"
+    },
+    {
+      "name": "Szigeti Péter"
+    }
   ],
+  "homepage": "https://github.com/svgdotjs/svg.draw.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/svgdotjs/svg.draw.js.git"
   },
+  "scripts": {
+    "build": "npm run fix && npm run rollup",
+    "fix": "npx eslint ./src --fix",
+    "lint": "npx eslint ./src",
+    "rollup": "npx rollup -c .config/rollup.config.js",
+    "zip": "zip -j dist/svg.draggable.js.zip -- LICENSE README.md dist/svg.draggable.js dist/svg.draggable.js.map dist/svg.draggable.min.js dist/svg.draggable.min.js.map",
+    "prepublishOnly": "rm -rf ./dist && npm run build",
+    "postpublish": "npm run zip",
+    "format": "prettier-standard --format"
+  },
   "engines": {
     "node": ">= 0.8.0"
   },
+  "prettier": {
+    "printWidth": 120
+  },
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-bumper": "^1.0.4",
-    "grunt-contrib-clean": "~0.4.0",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-watch": "~0.6.0"
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-external-helpers": "^7.8.3",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/polyfill": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/runtime": "^7.8.4",
+    "@babel/runtime-corejs3": "^7.8.4",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "prettier-standard": "^16.1.0",
+    "rollup": "^1.32.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-filesize": "^9.1.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-uglify": "^6.0.4",
+    "typescript": "^3.8.2"
   },
   "dependencies": {
-    "svg.js": "2.x.x"
+    "@svgdotjs/svg.js": "3.x.x"
   }
 }
