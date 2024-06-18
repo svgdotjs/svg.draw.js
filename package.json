@@ -46,9 +46,6 @@
   "engines": {
     "node": ">= 0.8.0"
   },
-  "prettier": {
-    "printWidth": 120
-  },
   "devDependencies": {
     "@babel/core": "^7.24.7",
     "@babel/plugin-external-helpers": "^7.24.7",
