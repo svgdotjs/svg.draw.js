@@ -39,7 +39,7 @@
     "prettier": "npx prettier --write --config .prettierrc.json .",
     "format": "npm run fix && npm run prettier",
     "rollup": "npx rollup -c .config/rollup.config.js",
-    "zip": "zip -j dist/svg.draggable.js.zip -- LICENSE README.md dist/svg.draggable.js dist/svg.draggable.js.map dist/svg.draggable.min.js dist/svg.draggable.min.js.map",
+    "zip": "zip -j dist/svg.draw.js.zip -- LICENSE README.md dist/svg.draw.js dist/svg.draw.js.map dist/svg.draw.min.js dist/svg.draw.min.js.map",
     "prepublishOnly": "rm -rf ./dist && npm run build",
     "postpublish": "npm run zip"
   },
