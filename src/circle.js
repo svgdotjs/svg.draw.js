@@ -16,12 +16,11 @@ export const circle = {
 
       // calculating the radius
       r: Math.sqrt(
-        (p.x - this.startPoint.x) * (p.x - this.startPoint.x) +
-          (p.y - this.startPoint.y) * (p.y - this.startPoint.y)
-      )
+        (p.x - this.startPoint.x) * (p.x - this.startPoint.x) + (p.y - this.startPoint.y) * (p.y - this.startPoint.y)
+      ),
     }
 
     this.snapToGrid(circle)
     this.el.attr(circle)
-  }
+  },
 }

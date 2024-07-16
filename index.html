@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -63,10 +63,10 @@
     </div>
 
     <svg id="drawing"></svg>
+    <script type="module" src="src/main.js"></script>
+    <script type="module">
+      import { SVG } from '@svgdotjs/svg.js'
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.2.4/svg.min.js"></script>
-    <script src="./dist/svg.draw.iife.js"></script>
-    <script>
       // Test w/ nested
       const svg = SVG().addTo('#drawing')
 

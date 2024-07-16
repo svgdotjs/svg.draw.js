@@ -1,6 +1,10 @@
 {
-  "trailingComma": "none",
+  "trailingComma": "es5",
   "tabWidth": 2,
   "semi": false,
-  "singleQuote": true
+  "singleQuote": true,
+  "printWidth": 120,
+  "proseWrap": "never",
+  "arrowParens": "always",
+  "htmlWhitespaceSensitivity": "ignore"
 }

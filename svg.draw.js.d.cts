@@ -17,7 +17,7 @@ declare module '@svgdotjs/svg.js' {
     }
   }
 
-  interface DrawEventMap {
+  interface SVGDotJsEventMap {
     drawstart: DrawEvent
     drawstop: Event
     drawupdate: DrawEvent
@@ -60,25 +60,5 @@ declare module '@svgdotjs/svg.js' {
 
     /** Call a method by name. May be used when drawing custom shapes. */
     draw(method: string): Element
-
-    /** Attach an event listener to a `DrawEvent` type */
-    on<K extends keyof DrawEventMap>(
-      type: K,
-      listener: (this: Element, ev: DrawEventMap[K]) => any
-    ): this
-
-    on(type: string, listener: (this: Element, ev: Event) => any): this
-
-    /** Detach an event listener from a `DrawEvent` type */
-    off<K extends keyof DrawEventMap>(
-      type: K,
-      listener?: (this: Element, ev: DrawEventMap[K]) => any
-    ): this
-
-    /** Detach ALL event listeners from the `DrawEvent` type */
-    off<K extends keyof DrawEventMap>(type: K): this
-
-    off(type: string, listener?: (this: Element, ev: Event) => any): this
-    off(type: string): this
   }
 }

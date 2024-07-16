@@ -1,3 +1,6 @@
-/node_modules/
-/test
-dist/
+.DS_Store
+.idea
+.vscode/
+node_modules/
+dist
+.vitepress

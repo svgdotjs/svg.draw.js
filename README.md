@@ -52,9 +52,7 @@ canvas.on('mouseup', function (event) {
 })
 ```
 
-The addon automatically knows when to start or stop drawing (most shapes start with the first event and stop with the second).
-However, when dealing with e.g. a polygon, you are able to set new points with every event. To finish the drawing you have to call the `done` function.
-See the next chapter for that.
+The addon automatically knows when to start or stop drawing (most shapes start with the first event and stop with the second). However, when dealing with e.g. a polygon, you are able to set new points with every event. To finish the drawing you have to call the `done` function. See the next chapter for that.
 
 # Methods
 
@@ -117,8 +115,7 @@ rect.on('drawstart', function (event) {
 
 # Plugins
 
-Currently `svg.draw.js` only supports all the basic shapes (line, polyline, polygon, rect, image, circle, ellipse).
-Any other type you want to draw, can be added using a plugin which just serves the functions to draw the shape.
+Currently `svg.draw.js` only supports all the basic shapes (line, polyline, polygon, rect, image, circle, ellipse). Any other type you want to draw, can be added using a plugin which just serves the functions to draw the shape.
 
 For example:
 

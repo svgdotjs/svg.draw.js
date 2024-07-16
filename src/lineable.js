@@ -10,7 +10,7 @@ export const lineable = {
     var p = this.startPoint
     var arr = [
       [p.x, p.y],
-      [p.x, p.y]
+      [p.x, p.y],
     ]
 
     this.el.plot(arr)
@@ -83,16 +83,9 @@ export const lineable = {
       this.p.x = array[i][0]
       this.p.y = array[i][1]
 
-      var p = this.p.matrixTransform(
-        this.parent.node
-          .getScreenCTM()
-          .inverse()
-          .multiply(this.el.node.getScreenCTM())
-      )
+      var p = this.p.matrixTransform(this.parent.node.getScreenCTM().inverse().multiply(this.el.node.getScreenCTM()))
 
-      this.set.push(
-        this.parent.circle(5).stroke({ width: 1 }).fill('#ccc').center(p.x, p.y)
-      )
+      this.set.push(this.parent.circle(5).stroke({ width: 1 }).fill('#ccc').center(p.x, p.y))
     }
   },
 
@@ -103,5 +96,5 @@ export const lineable = {
       this.el.plot(this.el.array())
       this.el.fire('undopoint')
     }
-  }
+  },
 }

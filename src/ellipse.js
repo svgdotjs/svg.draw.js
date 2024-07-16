@@ -15,10 +15,10 @@ export const ellipse = {
       cx: this.startPoint.x,
       cy: this.startPoint.y,
       rx: Math.abs(p.x - this.startPoint.x),
-      ry: Math.abs(p.y - this.startPoint.y)
+      ry: Math.abs(p.y - this.startPoint.y),
     }
 
     this.snapToGrid(ellipse)
     this.el.attr(ellipse)
-  }
+  },
 }

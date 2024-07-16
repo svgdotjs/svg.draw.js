@@ -10,7 +10,7 @@ export const rectable = {
   calc: function (e) {
     var rect = {
       x: this.startPoint.x,
-      y: this.startPoint.y
+      y: this.startPoint.y,
     }
     var p = this.transformPoint(e.clientX, e.clientY)
 
@@ -35,5 +35,5 @@ export const rectable = {
 
     // draw the element
     this.el.attr(rect)
-  }
+  },
 }
