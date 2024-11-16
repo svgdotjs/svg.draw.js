@@ -1,6 +1,6 @@
 {
   "name": "@svgdotjs/svg.draw.js",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "An extension for svg.js which allows to draw elements with mouse",
   "type": "module",
   "keywords": [
