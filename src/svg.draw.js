@@ -87,7 +87,7 @@ class PaintHandler {
     this.el.fire('drawstart', { event: event, p: this.p, m: this.m })
 
     // We need to bind the update-function to the mousemove event to keep track of the cursor
-    on(window, 'mousemove.draw', function (e) {
+    on(window, 'pointermove.draw', function (e) {
       _this.update(e)
     })
 
@@ -120,7 +120,7 @@ class PaintHandler {
     }
 
     // Unbind from all events
-    off(window, 'mousemove.draw')
+    off(window, 'pointermove.draw')
     this.parent.off('click.draw')
 
     // remove Refernce to PaintHandler
@@ -222,7 +222,7 @@ class PaintHandler {
 }
 
 extend(Element, {
-  // Draw element with mouse
+  // Draw element with pointer
   draw: function (event, options, value) {
     // sort the parameters
     if (!(event instanceof Event || typeof event === 'string')) {
