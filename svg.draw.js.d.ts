@@ -62,3 +62,5 @@ declare module '@svgdotjs/svg.js' {
     draw(method: string): Element
   }
 }
+
+export {}

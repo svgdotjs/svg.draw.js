@@ -3,6 +3,32 @@
   "version": "3.0.2",
   "description": "An extension for svg.js which allows to draw elements with mouse",
   "type": "module",
+  "packageManager": "pnpm@11.26.0",
+  "main": "dist/svg.draw.js",
+  "module": "dist/svg.draw.mjs",
+  "exports": {
+    ".": {
+      "browser": {
+        "types": "./dist/svg.draw.d.mts",
+        "default": "./dist/svg.draw.mjs"
+      },
+      "import": {
+        "types": "./dist/svg.draw.d.mts",
+        "default": "./dist/svg.draw.mjs"
+      },
+      "require": {
+        "types": "./dist/svg.draw.d.ts",
+        "default": "./dist/svg.draw.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "unpkg": "dist/svg.draw.js",
+  "jsdelivr": "dist/svg.draw.js",
+  "files": [
+    "/dist",
+    "!/dist/*.zip"
+  ],
   "keywords": [
     "svg.js",
     "draw",
@@ -10,60 +36,32 @@
   ],
   "bugs": "https://github.com/svgdotjs/svg.draw.js/issues",
   "license": "MIT",
+  "typings": "./dist/svg.draw.d.ts",
   "author": {
     "name": "Ulrich-Matthias Schäfer"
   },
   "homepage": "https://github.com/svgdotjs/svg.draw.js",
-  "module": "dist/svg.draw.js",
-  "main": "dist/svg.draw.umd.cjs",
-  "unpkg": "dist/svg.draw.iife.js",
-  "jsdelivr": "dist/svg.draw.iife.js",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./svg.draw.js.d.mts",
-        "default": "./dist/svg.draw.js"
-      },
-      "require": {
-        "types": "./svg.draw.js.d.cts",
-        "default": "./dist/svg.draw.umd.cjs"
-      },
-      "browser": {
-        "types": "./svg.draw.js.d.mts",
-        "default": "./dist/svg.draw.js"
-      }
-    }
-  },
-  "files": [
-    "/dist",
-    "/src",
-    "/svg.draw.js.d.cts",
-    "/svg.draw.js.d.mts"
-  ],
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && prettier --write . && eslint ./src && vite build",
-    "zip": "zip -j dist/svg.draw.js.zip -- LICENSE README.md dist/svg.draw.iife.js  dist/svg.draw.iife.js.map  dist/svg.draw.js  dist/svg.draw.js.map  dist/svg.draw.umd.cjs  dist/svg.draw.umd.cjs.map",
-    "prepublishOnly": "rm -rf ./dist && npm run build",
-    "postpublish": "npm run zip"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/svgdotjs/svg.draw.js.git"
+    "url": "git+https://github.com/svgdotjs/svg.draw.js.git"
   },
-  "engines": {
-    "node": ">= 14.18"
-  },
-  "devDependencies": {
-    "@types/node": "^20.14.10",
-    "eslint": "^9.7.0",
-    "eslint-plugin-import-x": "^3.0.1",
-    "prettier": "^3.3.3",
-    "terser": "^5.31.2",
-    "typescript": "^5.5.3",
-    "vite": "^5.3.4"
+  "scripts": {
+    "build": "pnpm fix && tsc && vite build",
+    "demo": "vite demo",
+    "demo:build": "vite build demo --outDir ../demo-dist --emptyOutDir",
+    "fix": "oxfmt --write . && oxlint -D correctness --fix .",
+    "lint": "oxfmt --check . && oxlint -D correctness .",
+    "prepublishOnly": "rm -rf ./dist && pnpm build && pnpm zip",
+    "zip": "zip -j dist/svg.draw.js.zip -- LICENSE README.md dist/svg.draw.js"
   },
   "peerDependencies": {
-    "@svgdotjs/svg.js": "^3.2.4"
+    "@svgdotjs/svg.js": "^3.0.0"
+  },
+  "devDependencies": {
+    "@svgdotjs/svg.js": "^3.2.8",
+    "oxfmt": "^0.67.0",
+    "oxlint": "^1.82.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2"
   }
 }
