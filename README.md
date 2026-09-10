@@ -6,6 +6,8 @@ An extension of [svg.js](https://github.com/svgdotjs/svg.js), which allows to dr
 
 For a demo see http://svgdotjs.github.io/svg.draw.js/
 
+Or run `pnpm demo`, which starts a vite dev server with the demo from `demo/`.
+
 # Get Started
 
 Install the plugin:

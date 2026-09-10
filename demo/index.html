@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>svg.draw.js — demo</title>
+
+    <style>
+      html,
+      body,
+      #drawing {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        cursor: crosshair;
+      }
+      body {
+        background-size: 50px 50px;
+        background-image:
+          linear-gradient(to right, lightgray 1px, transparent 1px),
+          linear-gradient(to bottom, lightgray 1px, transparent 1px);
+      }
+      div {
+        margin: 0.5rem;
+        pointer-events: none;
+        position: absolute;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      Draw shapes in sequence: line -> polyline -> polygon -> rect -> ellipse ->
+      circle
+      <br />
+      <ul>
+        <li>
+          <b>Enter</b>
+          for done (polyline, polygon)
+        </li>
+        <li>
+          Undo with
+          <b>Ctrl + Z</b>
+        </li>
+        <li>
+          Cancel with
+          <b>Escape</b>
+        </li>
+        <li>
+          <b>Backspace</b>
+          for previous shape
+        </li>
+        <li>
+          Press
+          <b>S</b>
+          to toggle snapping to grid
+        </li>
+        <li>
+          Press
+          <b>C</b>
+          to toggle drawing circles (line, polyline, polygon)
+        </li>
+      </ul>
+    </div>
+
+    <svg id="drawing"></svg>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
